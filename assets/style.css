@@ -1,3 +1,24 @@
+:root{
+    --primary:#0B5563;
+    --accent: #A2BCE0;
+    --secondary:#5299D3;
+}
+
 .cap{
     text-transform: capitalize;
+}
+.titlebar{
+    padding: 20px 0;
+    color: var(--primary);
+}
+.u-list{
+    line-height: 1.7
+}
+.u-list li{
+    list-style-type: none;
+    line-height: 2;
+    
+}
+.u-list li:nth-child(odd){
+   color: var(--secondary);
 }

@@ -34,7 +34,7 @@
       app
       flat
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" light/>
       
     </v-app-bar>
     </div>

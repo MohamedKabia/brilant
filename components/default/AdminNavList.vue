@@ -66,7 +66,7 @@
           action: 'mdi-account-school-outline',
           items: [
           { title: 'Student List', to:'/students' },
-          { title: 'Admission', to:'/admitstudent' },
+          { title: 'Admission', to:'/students/admitstudent' },
           ],
           title: 'Students',
         },
@@ -74,7 +74,7 @@
           action: 'mdi-human-male-board',
           items: [
             { title: 'Staff List', to:'/staffs' },
-            { title: 'Add Staff', to:'/addstaff' },
+            { title: 'Add Staff', to:'/staff/add' },
             { title: 'Teachers', to:'/teachers' },
           ],
           title: 'Staffs',
