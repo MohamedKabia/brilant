@@ -3,7 +3,7 @@ import axios from "axios";
 
 let userType 
 export const account = {
-   // namespaced: true,
+    namespaced: true,
     state: () => ({ 
         user:null,
         authToken:null,
