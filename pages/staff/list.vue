@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <Titlebar title="Students"/>
+            <Titlebar title="Staffs"/>
             <Table/>
         </v-container>
     </div>

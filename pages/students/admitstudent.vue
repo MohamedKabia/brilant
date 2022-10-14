@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <Titlebar/>
+            <Titlebar title="Add Student"/>
             <Admission/>
         </v-container>
     </div>

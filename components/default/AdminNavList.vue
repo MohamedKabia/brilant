@@ -73,17 +73,22 @@
         {
           action: 'mdi-human-male-board',
           items: [
-            { title: 'Staff List', to:'/staffs' },
+            { title: 'Staff List', to:'/staff/list' },
             { title: 'Add Staff', to:'/staff/add' },
-            { title: 'Teachers', to:'/teachers' },
+            { title: 'Teachers', to:'/staff/teachers' },
           ],
           title: 'Staffs',
         },
+       
         {
           action: 'mdi-shape-outline',
-          items: [{ title: 'Departments List', to:'/departments' }],
+          items: [
+            { title: 'Departments List', to:'/departments/list' },
+            { title: 'Add Department', to:'/departments/add' },
+          ],
           title: 'Departments',
         },
+       
         {
           action: 'mdi-town-hall',
           items: [{ title: 'All Levels', to:'/subjects' }],

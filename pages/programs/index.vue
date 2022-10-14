@@ -1,17 +1,17 @@
 <template>
     <div>
         <v-container>
-            <Titlebar title="Students"/>
-            <Table/>
+            <Titlebar title="Programs"/>
+            <Programs/>
         </v-container>
     </div>
 </template>
 <script>
-    import Table from "../../components/default/Table.vue"
+    import Programs from '../../components/Programs.vue'
     import Titlebar from "../../components/default/Titlebar.vue";
 export default {
     name:'StudentList',
-    components:{Table,Titlebar},
+    components:{Programs,Titlebar},
     data() {
         return {
             
