@@ -9,7 +9,7 @@
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Programs</v-toolbar-title>
+          <v-toolbar-title>All Bills/Fees</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -46,7 +46,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Subject name"
+                        label="Bill name"
                         dense
                         outlined 
                       ></v-text-field>
@@ -128,13 +128,7 @@
       <template v-slot:item.actions="{ item }">
         
         <nuxt-link :to='"/programs/"+item.id'>
-          <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-          >
-            mdi-eye
-          </v-icon>
+         
         </nuxt-link>
         <v-icon
           small
@@ -225,22 +219,25 @@
             
             {
               id:"1",
-              code:'uls',
-              name: 'Junior Secondary',
+              code:'usls',
+              name: 'First Term Fees',
+              amount:2000,
               dueDate: 237,
               description: "awesome"
             },
             {
               id:"2",
-              code:'uls',
-              name: 'SSS SCIENCE',
+              code:'usds',
+              name: 'Second Term Fee',
+              amount:2000,
               dueDate: 262,
               description: "awesome descr"
             },
             {
               id:"3",
-              code:'uls',
-              name: 'SSS ART',
+              code:'uvls',
+              name: 'Tution Fee',
+              amount:2000,
               dueDate: "awesome"
             },
           

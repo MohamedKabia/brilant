@@ -1,15 +1,15 @@
 <template>
     <v-data-table
       :headers="headers"
-      :items="subjects"
-      sort-by="startedDate"
+      :items="bills"
+      sort-by="dueDate"
       class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar
           flat
          >
-          <v-toolbar-title>Subjects</v-toolbar-title>
+          <v-toolbar-title>Student Bills</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -25,10 +25,9 @@
                 color="primary"
                 dark
                 class="mb-2"
-                v-bind="attrs"
-                v-on="on"
+                
               >
-                Add New Subject
+                Add New Bill
               </v-btn>
             </template>
             <v-card>
@@ -42,11 +41,29 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
+                     class="primary--text"
+                    >
+                     Bill: {{editedItem.name}}
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                     class="secondary--text"
+                    >
+                     Amount: {{editedItem.amount | currency}}
+                    </v-col>
+
+                    <v-col
+                      cols="12"
+                      sm="6"
                     >
                       <v-text-field
-                        v-model="editedItem.name"
-                        label="Subject name"
+                        v-model="amount"
+                        label="Received Amount"
+                        @keyup="updateBalance"
+                        outlined
+                        dense
+                        type="number"
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -54,20 +71,7 @@
                       sm="6"
                       md="4"
                     >
-                      <v-text-field
-                        v-model="editedItem.startedDate"
-                        label="Started Date"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-textarea
-                        v-model="editedItem.description"
-                        label="Description"
-                      ></v-textarea>
+                    Balance: {{balance}}
                     </v-col>
                    
                   </v-row>
@@ -84,7 +88,7 @@
                   Cancel
                 </v-btn>
                 <v-btn
-                  color="blue darken-1"
+                  color="primary darken-1"
                   text
                   @click="save"
                 >
@@ -95,7 +99,7 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+              <v-card-title class="text-h5">Are you sure you want to remove this bill?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -108,15 +112,13 @@
       </template>
       <template v-slot:item.actions="{ item }">
         
-        <nuxt-link :to='"/subjects/"+item.id'>
           <v-icon
           small
           class="mr-2"
-          @click="editItem(item)"
+          @click="viewHistory(item)"
           >
             mdi-eye
           </v-icon>
-        </nuxt-link>
         <v-icon
           small
           class="mr-2"
@@ -145,25 +147,34 @@
     export default {
       data: () => ({
         dialog: false,
+        balance:0,
+        amount:0,
         dialogDelete: false,
         headers: [
-          {
-            text: 'Code',
+        {
+            text: 'ID',
             align: 'start',
             sortable: false,
-            value: 'code',
+            value: '_id',
           },
           {
-            text: 'Dessert (100g serving)',
+            text: 'Name',
             align: 'start',
             sortable: false,
             value: 'name',
           },
-          { text: 'Date Started', value: 'startedDate' },
+          {
+            text: 'Amount',
+            align: 'start',
+            sortable: false,
+            value: 'amount',
+          },
+          
+          { text: 'Due Date', value: 'dueDate' },
           
           { text: 'Actions', value: 'actions', sortable: false },
         ],
-        subjects: [],
+        bills: [],
         editedIndex: -1,
         editedItem: {
           name: '',
@@ -179,7 +190,7 @@
   
       computed: {
         formTitle () {
-          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+          return this.editedIndex === -1 ? 'PAYMENT HISTORY' : 'RECEIVE PAYMENT'
         },
       },
   
@@ -198,47 +209,53 @@
   
       methods: {
         initialize () {
-          this.subjects = [
+          this.bills = [
             
             {
               id:"1",
-              code:'uls',
-              name: 'Agriculture',
-              startedDate: 237,
+              amount:2000,
+              name: 'First Term Tution',
+              dueDate: "11-11-2022",
               description: "awesome"
             },
             {
               id:"2",
-              code:'uls',
-              name: 'Mathematic',
-              startedDate: 262,
+              amount:4000,
+              name: 'Computer Science',
+              dueDate: "02-01-2023",
               description: "awesome descr"
              
             },
             {
               id:"3",
-              code:'uls',
-              name: 'English',
-              startedDate: "awesome"
+              amount:1000,
+              name: 'Sporting',
+              dueDate: "02-12-2022"
             },
           
           ]
         },
   
         editItem (item) {
-          this.editedIndex = this.subjects.indexOf(item)
+          this.editedIndex = this.bills.indexOf(item)
+          this.editedItem = Object.assign({}, item)
+          this.dialog = true
+        },
+        viewHistory (item) {
+           this.editedIndex = -1;
+          let index = this.bills.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialog = true
         },
   
         deleteItem (item) {
-          this.editedIndex = this.subjects.indexOf(item)
+          this.editedIndex = this.bills.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialogDelete = true
         },
   
         deleteItemConfirm () {
-          this.subjects.splice(this.editedIndex, 1)
+          this.bills.splice(this.editedIndex, 1)
           this.closeDelete()
         },
   
@@ -257,12 +274,14 @@
             this.editedIndex = -1
           })
         },
-  
+        updateBalance(){
+          this.balance= this.editedItem.amount - this.amount
+        },
         save () {
           if (this.editedIndex > -1) {
-            Object.assign(this.subjects[this.editedIndex], this.editedItem)
+            Object.assign(this.bills[this.editedIndex], this.editedItem)
           } else {
-            this.subjects.push(this.editedItem)
+            this.bills.push(this.editedItem)
           }
           this.close()
         },

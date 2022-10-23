@@ -1,9 +1,6 @@
-import { baseUrl } from "../base";
-import axios from "axios";
-
-export const management = {
-    namespaced: true,
-    state: () => ({ 
+import { baseUrl } from "./base";
+//import axios from "axios";
+export const state = () => ({
         departments:[],
         teachers:[],
         students:[],
@@ -11,8 +8,8 @@ export const management = {
         st:null,
         student:null,
         subjects:[],
-     }),
-    mutations: { 
+     });
+export const  mutations= { 
         pushData(state,payload){
             state[payload.itemsName].push(payload.data)
         },
@@ -28,8 +25,8 @@ export const management = {
             let i =state.items.indexOf(a);
             state.items[i]=payload.date;
         }
-     },
-    actions: {  
+     };
+     export const    actions= {  
         addDepartment({commit},payload){
             axios
             .post(`${baseUrl}/api/department/create`, payload)
@@ -161,8 +158,8 @@ export const management = {
             commit("setData", {itemsName:"student",data:response.data});
             })
         },
-    },
-    getters: { 
+    };
+    export const getters= { 
         getStudents(state){
             return state.students;
         },
@@ -182,4 +179,4 @@ export const management = {
             return state.st
         }
     }
-  }
+  
