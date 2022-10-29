@@ -32,29 +32,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-group>
-
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon>mdi-table</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-title>Time Table</v-list-item-title>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon>mdi-calendar-clock-outline</v-icon>
-        </v-list-item-icon>
-        
-        <v-list-item-title>Event & Calender</v-list-item-title>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-icon>
-          <v-icon>mdi-cog-outline</v-icon>
-        </v-list-item-icon>
-
-        <v-list-item-title>Settings</v-list-item-title>
-      </v-list-item>
+      
     </v-list>
     </div>
 </template>
@@ -91,22 +69,31 @@
        
         {
           action: 'mdi-town-hall',
-          items: [{ title: 'All Levels', to:'/subjects' }],
-          title: 'School Levels',
+          items: [
+            { title: 'School Levels', to:'/setup/schools' },
+            { title: 'Clases Group', to:'/setup/clases' },
+            { title: 'Levels', to:'/setup/levels' }
+        ],
+          title: 'School Setup',
         },
         {
           action: 'mdi-book',
           items: [{ title: 'Subjects', to:'/subjects' }],
           title: 'Subjects',
         },
-       
+        {
+          action: 'mdi-microsoft-windows-classic',
+          items: [{ title: 'Grades', to:'/grading' }],
+          title: 'Grading',
+        },
         {
           action: 'mdi-account',
           items: [
             { title: 'Fees & Collection', to:'/accounting/fees' },
             { title: 'Invoice', to:'/accounting/invoice'},
             { title: 'Salary', to:'/accounting/salary'},
-            { title: 'Expenses', to:'/accounting/expenses'}
+            { title: 'Expenses', to:'/accounting/expenses'},
+            { title: 'Bills/Fees', to:'/bills'},
           ],
           title: 'Accounting',
         },

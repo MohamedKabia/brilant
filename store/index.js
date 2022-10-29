@@ -5,7 +5,7 @@ Vue.use(Vuex)
 Vue.config.devtools = true
 */
 new Vuex.Store({
-    
+   
 })
 
 

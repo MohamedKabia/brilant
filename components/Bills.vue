@@ -58,7 +58,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.dueDate"
-                        label="Started Date"
+                        label="Due Date"
                         dense
                         outlined 
                       ></v-text-field>

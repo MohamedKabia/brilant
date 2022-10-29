@@ -4,25 +4,28 @@
             <Titlebar :title="title"/>
             <v-menu>
                 <template v-slot:activator="{ on: menu, attrs }">
-                    <v-tooltip bottom>
+                    <v-tooltip bottom color="primary">
                     <template v-slot:activator="{ on: tooltip }">
                         <v-btn
-                        color="primary"
+                        color="white"
                         dark
                         v-bind="attrs"
                         v-on="{ ...tooltip, ...menu }"
                         icon
+                        class="primary"
+                        elevation="4"
                         >
-                        <v-icon color="primary">mdi-microsoft-windows-classic</v-icon>
+                        <v-icon color="info">mdi-microsoft-windows-classic</v-icon>
                         </v-btn>
                     </template>
-                    <span>Im A ToolTip</span>
+                    <span >Select Class Group</span>
                     </v-tooltip>
                 </template>
                 <v-list>
                     <v-list-item
                     v-for="(item, index) in items"
                     :key="index"
+                    class="pointer"
                     >
                     <v-list-item-title @click="getStudents(item.title)">{{ item.title }}</v-list-item-title>
                     </v-list-item>

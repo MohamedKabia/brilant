@@ -48,7 +48,7 @@
     </div>
 </template>
 <script>
-     import Titlebar from "../../components/default/Titlebar.vue";
+     import Titlebar from "../../../components/default/Titlebar.vue";
 export default {
     components:{Titlebar},
     data() {

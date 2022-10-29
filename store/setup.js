@@ -1,13 +1,9 @@
 import { baseUrl } from "./base";
-//import axios from "axios";
 export const state = () => ({
-        departments:[],
-        teachers:[],
-        students:[],
-        staff:[],
-        st:null,
-        student:null,
-        subjects:[],
+        institution:null,
+        schools:[],
+        classes:[],
+        rooms:[],
      });
 export const  mutations= { 
         pushData(state,payload){
@@ -27,38 +23,38 @@ export const  mutations= {
         }
      };
      export const    actions= {  
-        addDepartment({commit},payload){
-            axios
-            .post(`${baseUrl}/api/department/create`, payload)
+        initInstitution({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/institution/create`, payload)
             .then((res) => {
                 commit("pushTodepartment",res.data);
             }).catch(err=>{
                 console.log(err)
             })
         },
-        updateDepartment({commit},payload){
-            axios
-            .post(`${baseUrl}/api/department/update/${payload._id}`, payload)
+        updateInstitution({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/institution/update/${payload._id}`, payload)
             .then((res) => {
-                commit("updateItem",{data:payload, itemNmae:"departments"});
+                commit("updateItem",{data:payload, itemNmae:"Institution"});
             }).catch(err=>{
                 console.log(err)
             })
         },
         
-        addStaff({commit},payload){
-            axios
-            .post(`${baseUrl}/api/staff/create`, payload)
+        addSchools({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/schools/create`, payload)
             .then((response) => {
-                commit("pushData", {itemsName:"staff",data:response.data});
+                commit("pushData", {itemsName:"staff",data:response});
             });
         },
 
-        addStudent({commit},payload){
-            axios
-            .post(`${baseUrl}/api/student/create`, payload)
+        addRooms({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/rooms/create`, payload)
             .then((response) => {
-                commit("pushData", {itemsName:"students",data:response.data});
+                commit("pushData", {itemsName:"students",data:response});
               
             }).catch(err=>{
                 console.log(err)
@@ -66,11 +62,11 @@ export const  mutations= {
         },
 
         //subjects
-        addSubject({commit},payload){
-            axios
-            .post(`${baseUrl}/api/subject/create`, payload)
+        addClasses({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/classes/create`, payload)
             .then((response) => {
-                commit("pushData", {itemsName:"subjects",data:response.data});
+                commit("pushData", {itemsName:"subjects",data:response});
               
             }).catch(err=>{
                 console.log(err)
@@ -79,83 +75,71 @@ export const  mutations= {
 
        
 
-        getStaff({commit }, payload) {
+        getSchools({commit }, payload) {
             let token = payload;
-            axios
-              .get(`${baseUrl}/api/staff/getStaff`, {
+            this.$axios
+             .$get(`${baseUrl}/api/staff/getStaff`, {
                 headers: {
                   authtoken: token,
                 },
               })
               .then((response) => {
-                commit("setData", {itemsName:"staff",data:response.data});
+                commit("setData", {itemsName:"staff",data:response});
               })
           },
-           //get single staff by id
-        getStaffById({commit }, payload) {
-            let token = payload;
-            axios
-                .get(`${baseUrl}/api/staff/get/${payload}`, {
-                headers: {
-                    authtoken: token,
-                },
-                })
-                .then((response) => {
-                commit("setData", {itemsName:"st",data:response.data});
-                })
-        },
+       
         //get department 
-        getdepartments({commit }, payload) {
+        getInstitution({commit }, payload) {
             let token = payload;
-            axios
-              .get(`${baseUrl}/api/department/getDepartments`, {
+            this.$axios
+             .$get(`${baseUrl}/api/department/getDepartments`, {
                 headers: {
                   authtoken: token,
                 },
               })
               .then((response) => {
-                commit("setData", {itemsName:"departments",data:response.data});
+                commit("setData", {itemsName:"Institution",data:response});
               })
           },
 
           //subjects
           getSubjects({commit }, payload) {
             let token = payload;
-            axios
-              .get(`${baseUrl}/api/subject/getSubjects`, {
+            this.$axios
+             .$get(`${baseUrl}/api/subject/getSubjects`, {
                 headers: {
                   authtoken: token,
                 },
               })
               .then((response) => {
-                commit("setData", {itemsName:"subjects",data:response.data});
+                commit("setData", {itemsName:"subjects",data:response});
               })
           },
 
           //get students 
         getStudents({commit }, payload) {
             let token = payload;
-            axios
-              .get(`${baseUrl}/api/student/getStudents`, {
+            this.$axios
+             .$get(`${baseUrl}/api/student/getStudents`, {
                 headers: {
                   authtoken: token,
                 },
               })
               .then((response) => {
-                commit("setData", {itemsName:"students",data:response.data});
+                commit("setData", {itemsName:"students",data:response});
               })
           },
         //get single student
         getStudent({commit }, payload) {
         let token = payload;
-        axios
-            .get(`${baseUrl}/api/student/get/${payload}`, {
+        this.$axios
+            .$get(`${baseUrl}/api/student/get/${payload}`, {
             headers: {
                 authtoken: token,
             },
             })
             .then((response) => {
-            commit("setData", {itemsName:"student",data:response.data});
+            commit("setData", {itemsName:"student",data:response});
             })
         },
     };
@@ -167,7 +151,7 @@ export const  mutations= {
             return state.student;
         },
         getDepartments(state){
-            return state.departments;
+            return state.Institution;
         },  
         getStaff(state){
             return state.staff;

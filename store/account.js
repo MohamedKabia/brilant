@@ -1,5 +1,4 @@
 import { baseUrl } from "./base";
-//import axios from "axios";
 let userType 
 export const state = () => ({
     user:null,
@@ -44,33 +43,37 @@ export const  mutations= {
 };
 export const   actions= {  
     studentLogin({dispatch, commit},payload){
-        axios
-        .post(`${baseUrl}/api/auth/student/login`, payload)
+        this.$axios.$post(`${baseUrl}/api/auth/student/login`, payload)
         .then((res) => {
-            commit("setAuthToken",res.data);
+            commit("setAuthToken",res);
             userType='student';
             dispatch("getUser",res.data)
         });
     },
     
     staffLogin({dispatch, commit},payload){
-        axios
-        .post(`${baseUrl}/api/auth/staff/login`, payload)
+        this.$axios.$post(`${baseUrl}/api/auth/staff/login`, payload)
         .then((res) => {
-            commit("setAuthToken",res.data);
+            commit("setAuthToken",res);
             userType='staff';
-            dispatch("getUser",res.data)
+            console.log(res)
+            dispatch("getUser",res)
         });
     },
 
     parentLogin({dispatch, commit},payload){
-        axios
-        .post(`${baseUrl}/api/auth/parent/login`, payload)
+        this.$axios.$post(`${baseUrl}/api/auth/parent/login`, payload)
         .then((res) => {
-            commit("setAuthToken",res.data);
+            commit("setAuthToken",res);
             userType='parent';
-            dispatch("getUser",res.data)
+            console.log(res)
+            dispatch("getUser",res)
         });
+    },
+    logout({dispatch, commit}){
+        window.localStorage.removeItem("authToken");
+        commit("setAuthToken", null);
+        commit("setUser", null);
     },
 
     //verify local store token
@@ -81,20 +84,20 @@ export const   actions= {
     //get user 
     getUser({ dispatch, commit }, payload) {
         let token = payload;
-        axios
-            .get(`${baseUrl}/api/${userType}/verify`, {
+        this.$axios
+            .$get(`${baseUrl}/api/${userType}/verify`, {
             headers: {
                 authtoken: token,
             },
             })
             .then((response) => {
             commit("setAuthToken", token);
-            commit("setUser", response.data);
+            commit("setUser", response);
             if(userType=='staff'){
-                dispatch('manage/getdepartments',token,{root:true});
-                dispatch('manage/getStudents',token,{root:true});
-                dispatch('manage/getStaff',token,{root:true});
-                dispatch('manage/getSubjects',token,{root:true});
+                dispatch('management/getdepartments',token,{root:true});
+                dispatch('management/getStudents',token,{root:true});
+                dispatch('management/getStaff',token,{root:true});
+                dispatch('management/getSubjects',token,{root:true});
 
                 dispatch('settings/getlevels',token,{root:true});
                 dispatch('settings/getPrograms',token,{root:true})

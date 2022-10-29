@@ -7,10 +7,12 @@
       fixed
       app
       flat
+      v-if="user"
     >
     <userAvatarVue/>
       <StudentNavList v-if="false"/>
-      <AdminNavList/>
+      <AdminNavList v-if="roles.includes('Admin')" />
+      <staffNavListVue v-if="roles.includes('Staff')" />
       <v-list v-if="false">
         <v-list-item
           v-for="(item, i) in items"
@@ -35,7 +37,6 @@
       flat
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" light/>
-      
     </v-app-bar>
     </div>
 </template>
@@ -44,9 +45,10 @@
   import userAvatarVue from './default/userAvatar.vue';
   import AdminNavList from './default/AdminNavList.vue';
   import StudentNavList from './default/StudentNavList.vue';
+  import staffNavListVue from './default/staffNavList.vue';
     export default {
       name: 'DefaultLayout',
-      components:{userAvatarVue,AdminNavList,StudentNavList},
+      components:{userAvatarVue,AdminNavList,StudentNavList,staffNavListVue},
       data () {
         return {
           clipped: false,
@@ -69,7 +71,38 @@
           rightDrawer: false,
           title: 'Vuetify.js'
         }
-      }
+      },
+
+      computed: {
+        user(){
+            return this.$store.getters['account/getUser']
+        },
+        roles(){
+          let  userRoles=[];
+          let roles =this.user.roles;
+          roles.forEach(role => {
+            userRoles.push(role.role)
+          });
+          return userRoles
+        }
+	    },
+      mounted() {
+       
+            let authToken = window.localStorage.getItem("authToken");
+            if(authToken){
+              let data =JSON.parse(authToken)
+              this.$store.dispatch('account/verifyToken',data);
+            }else this.$router.push('/login')      
+      },
+      
+      watch: {
+        user(val){
+          if(val == null || val == undefined){
+            this.$router.push('/login') 
+          }
+          
+        }
+	    },
     }
     </script>
     

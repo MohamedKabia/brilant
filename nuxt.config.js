@@ -41,8 +41,19 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    'vue-currency-filter/nuxt','@nuxtjs/axios'
   ],
-
+  currencyFilter: [
+    { // default name 'currency'
+      symbol: 'Le',
+      thousandsSeparator: ',',
+      fractionCount: 2,
+      fractionSeparator: '.',
+      symbolPosition: 'front',
+      symbolSpacing: true,
+      avoidEmptyDecimals: '',
+    },
+  ],
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

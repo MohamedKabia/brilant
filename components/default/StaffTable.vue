@@ -3,7 +3,7 @@
       <v-data-table
         v-model="selected"
         :headers="headers"
-        :items="students"
+        :items="staffs"
         item-key="_id"
         class="elevation-1"
         show-select
@@ -35,7 +35,7 @@
                 color="primary"
                 dark
                 class="mb-2"
-                to="/students/admitstudent"
+                to="/staffs/admitstudent"
                 v-on="on"
               >
                 Add New Student
@@ -45,7 +45,7 @@
 
         <template v-slot:item.firstName="{item}">
             <div class="primary--text">
-              <nuxt-link :to='"/students/"+item._id'>
+              <nuxt-link :to='"/staff/"+item._id'>
                 <v-avatar
                   size="36px"
                 >
@@ -84,7 +84,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-           <v-btn icon color="success" :to='"/students/edit/"+item._id'>
+           <v-btn icon color="success" :to='"/staff/edit/"+item._id'>
             <v-icon>mdi-pencil</v-icon>
            </v-btn>
            </div>
@@ -101,104 +101,44 @@
         selected: [],
           search: '',
           links: [
-        { title: 'Bills and Fees', to:'studentbill'},
+        { title: 'Salary and Lones', to:'salary'},
         { title: 'Grades and Performance', to:'grade'},
-        { title: 'attendance', to:'studentattendance'},
-        { title: 'Click Me 2', to:''},
+        { title: 'Attendance', to:'studentattendance'},
+        { title: 'Tasks & Assignment', to:'editStaff'},
       ],
-          student: [
-            {
-              _id:'1',
-              firstName:'Mohamed',
-              lastName: 'Kanu',
-              class: 2,
-              dob: 6.0,
-              grade: 24,
-              
-            },
-            {
-              _id:'2',
-              firstName:'Alice',
-              lastName: 'Turay',
-              class: 12,
-              dob: 9.0,
-              grade: 37,
-              
-            },
-            
-            {
-              _id:'4',
-              firstName: 'James',
-              lastName: 'Kamara',
-              class: 13,
-              dob: 3.7,
-              grade: 67,
-             
-            },
-            {
-              _id:'5',
-              firstName: 'Glorus',
-              lastName: 'Williams',
-              class: 12,
-              dob: 16.0,
-              grade: 49,
-              
-            },
-            {
-              _id:'6',
-              firstName: 'Joice',
-              lastName: 'Jones',
-              class: 8,
-              dob: 0.0,
-              grade: 94,
-            },
-            {
-              _id:'12',
-              firstName: 'Ladipo',
-              lastName: 'Wilkison',
-              class: 11,
-              dob: 0.2,
-              grade: 98,
-            },
-          ],
+          
         }
       },
       computed: {
-        students(){
-          return this.$store.getters['management/getStudents'];
+        staffs(){
+          return this.$store.getters['management/getStaff'];
         },
         headers () {
           return [
           {
-              text: 'StudentID',
+              text: 'StaffID',
               align: 'start',
               sortable: true,
-              value: 'studentId',
+              value: 'staffId',
             },
             {
-              text: 'First Name',
+              text: 'Name',
               align: 'start',
               sortable: false,
               value: 'firstName',
             },
             {
-              text: 'Class',
-              value: 'class',
-              filter: value => {
-                if (!this.class) return true
-  
-                return value < parseInt(this.class)
-              },
+              text: 'Department',
+              value: 'department',
+             
             },
             { text: 'DOB', value: 'dob' },
-            { text: 'Grade/Form', value: 'grade' },
             { text: 'Actions', value: 'actions' },
           ]
         },
       },
       methods: {
         view(val){
-          console.log(val)
         }
       },
     }

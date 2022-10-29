@@ -2,16 +2,16 @@
     <div>
         <v-container>
             <Titlebar title="Staffs"/>
-            <Table/>
+            <StaffTable/>
         </v-container>
     </div>
 </template>
 <script>
-    import Table from "../../components/default/Table.vue"
+    import StaffTable from "../../components/default/StaffTable.vue"
     import Titlebar from "../../components/default/Titlebar.vue";
 export default {
     name:'StudentList',
-    components:{Table,Titlebar},
+    components:{StaffTable,Titlebar},
     data() {
         return {
             

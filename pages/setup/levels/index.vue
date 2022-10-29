@@ -7,8 +7,8 @@
     </div>
 </template>
 <script>
-    import Levels from '../../components/Levels.vue'
-    import Titlebar from "../../components/default/Titlebar.vue";
+    import Levels from '../../../components/Levels.vue'
+    import Titlebar from "../../../components/default/Titlebar.vue";
 export default {
     name:'StudentList',
     components:{Levels,Titlebar},
