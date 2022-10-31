@@ -1,5 +1,4 @@
 import { baseUrl } from "./base";
-//import axios from "axios";
 
 export const state = () => ({
         levels:null,
@@ -43,8 +42,8 @@ export const mutations= {
 
 export const actions= {  
     addLevels({commit},payload){
-        axios
-        .post(`${baseUrl}/api/level/create`, payload)
+        this.$axios
+        .$post(`${baseUrl}/api/level/create`, payload)
         .then((res) => {
             commit("pushToLevels",res.data);
         }).catch(err=>{
@@ -53,8 +52,8 @@ export const actions= {
     },
 
     addPrograms({commit},payload){
-        axios
-        .post(`${baseUrl}/api/programs/create`, payload)
+        this.$axios
+        .$post(`${baseUrl}/api/programs/create`, payload)
         .then((res) => {
             commit("pushData",{data:res.data, itemsName:'programs'});
         }).catch(err=>{
@@ -62,8 +61,8 @@ export const actions= {
         })
     },
     updateLevels({commit},payload){
-        axios
-        .post(`${baseUrl}/api/level/update/${payload._id}`, payload)
+        this.$axios
+        .$post(`${baseUrl}/api/level/update/${payload._id}`, payload)
         .then((res) => {
             commit("updateItem",{data:payload, itemNmae:"levels"});
         }).catch(err=>{
@@ -71,8 +70,8 @@ export const actions= {
         })
     },
     updateProgram({commit},payload){
-        axios
-        .post(`${baseUrl}/api/programs/update/${payload._id}`, payload)
+        this.$axios
+        .$post(`${baseUrl}/api/programs/update/${payload._id}`, payload)
         .then((res) => {
             commit("updateItem",{data:payload, itemNmae:"programs"});
         }).catch(err=>{
@@ -83,8 +82,8 @@ export const actions= {
     //get levels 
     getlevels({commit }, payload) {
         let token = payload;
-        axios
-            .get(`${baseUrl}/api/level/getLevels`, {
+        this.$axios
+            .$get(`${baseUrl}/api/level/getLevels`, {
             headers: {
                 authtoken: token,
             },
@@ -99,8 +98,8 @@ export const actions= {
 
     getPrograms({commit }, payload) {
     let token = payload;
-    axios
-        .get(`${baseUrl}/api/programs/getprograms`, {
+    this.$axios
+        .$get(`${baseUrl}/api/programs/getprograms`, {
         headers: {
             authtoken: token,
         },
