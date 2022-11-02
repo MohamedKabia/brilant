@@ -1,11 +1,13 @@
-<template>
-  <v-row justify="center" align="center">
-    <v-container></v-container>
-  </v-row>
+<template >
+  <div>
+      <v-container>
+          <AdminDashboard/>
+      </v-container>
+  </div>
 </template>
-
 <script>
+  import AdminDashboard from '../components/AdminDashboard.vue';
 export default {
-  name: 'IndexPage'
+  components:{AdminDashboard}
 }
 </script>

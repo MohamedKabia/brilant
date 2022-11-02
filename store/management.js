@@ -171,11 +171,17 @@ export const  mutations= {
         getStaff(state){
             return state.staff;
         },
-        getSubject(state){
+        getSubjects(state){
             return state.subject;
         },
         getStaffById(state){
             return state.st
+        },
+        getTeachers(state){
+           let teachers = state.staff.map((staff) => {
+                return {...staff, roles: staff.roles.filter((role) => role.role === "Teacher")}
+            })
+            return teachers
         }
     }
   

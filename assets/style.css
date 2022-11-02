@@ -31,3 +31,23 @@
 .light{
     color:white;
 }
+.data-card{
+    width: 100%;
+    overflow: hidden;
+    padding: 12px;
+    border-bottom-right-radius: 14px;
+    border-top-left-radius: 14px;
+}
+.card-icon{
+    border-radius: 5px;
+    background-color: #A2BCE0;
+    opacity: .7;
+    color: var(--primary);
+    height: 100%;
+    width: 50px;
+    font-size: 2ex;
+    
+}
+.card-icon i{
+    font-size: 20px;
+}

@@ -62,7 +62,6 @@
           action: 'mdi-shape-outline',
           items: [
             { title: 'Departments List', to:'/departments/list' },
-            { title: 'Add Department', to:'/departments/add' },
           ],
           title: 'Departments',
         },
