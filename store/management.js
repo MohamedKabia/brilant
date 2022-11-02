@@ -67,7 +67,7 @@ export const  mutations= {
         //subjects
         addSubject({commit},payload){
             this.$axios
-            .$post(`${baseUrl}/api/subject/create`, payload)
+            .$post(`${baseUrl}/api/s/create`, payload)
             .then((response) => {
                 commit("pushData", {itemsName:"subjects",data:response});
               
@@ -121,7 +121,7 @@ export const  mutations= {
           getSubjects({commit }, payload) {
             let token = payload;
             this.$axios
-             .$get(`${baseUrl}/api/subject/getSubjects`, {
+             .$get(`${baseUrl}/api/s/getSubjects`, {
                 headers: {
                   authtoken: token,
                 },
@@ -172,7 +172,7 @@ export const  mutations= {
             return state.staff;
         },
         getSubjects(state){
-            return state.subject;
+            return state.subjects;
         },
         getStaffById(state){
             return state.st
