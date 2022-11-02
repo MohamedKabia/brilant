@@ -186,7 +186,7 @@
           value: 'grade',
         },
         {
-          text: 'Pass Mark ',
+          text: 'Pass Mark (%)',
           align: 'start',
           sortable: false,
           value: 'passMark',
