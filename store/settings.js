@@ -1,9 +1,8 @@
 import { baseUrl } from "./base";
 
 export const state = () => ({
-        levels:null,
-        programs:null,
-        staff:null,
+        levels:[],
+        programs:[],
      });
  
 export const mutations= { 
@@ -55,12 +54,12 @@ export const actions= {
         this.$axios
         .$post(`${baseUrl}/api/programs/create`, payload)
         .then((res) => {
-            commit("pushData",{data:res.data, itemsName:'programs'});
+            commit("pushData",{data:res, itemsName:'programs'});
         }).catch(err=>{
             console.log(err)
         })
     },
-    updateLevels({commit},payload){
+    updateLevel({commit},payload){
         this.$axios
         .$post(`${baseUrl}/api/level/update/${payload._id}`, payload)
         .then((res) => {
@@ -89,7 +88,7 @@ export const actions= {
             },
             })
             .then((response) => {
-            commit("setLevels", response.data);
+            commit("setLevels", response);
             })
             .catch((err) => {
             console.log("levels error", err)
@@ -105,7 +104,7 @@ export const actions= {
         },
         })
         .then((response) => {
-        commit("setPrograms", response.data);
+        commit("setPrograms", response);
         })
         .catch((err) => {
         console.log("programs error", err)

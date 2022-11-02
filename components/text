@@ -1,31 +1,15 @@
 <template>
     <v-data-table
       :headers="headers"
-      :items="departments"
-      sort-by="name"
+      :items="subjects"
+      sort-by="level"
       class="elevation-1"
     >
-      <template v-slot:item.hods="{item}">
-          <div class="primary--text">
-            <nuxt-link :to='"/staff/"+item._id'>
-              <v-avatar
-                size="36px"
-              >
-                <img
-                  alt="Avatar"
-                  src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                >
-                
-            </v-avatar>
-            <span v-if="item">{{item.hods[0].firstName +" "+ item.hods[0].lastName}}</span>
-            </nuxt-link>
-          </div>
-        </template>
       <template v-slot:top>
         <v-toolbar
           flat
-         >
-          <v-toolbar-title>Departments</v-toolbar-title>
+        >
+          <v-toolbar-title>Levels</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -34,7 +18,7 @@
           <v-spacer></v-spacer>
           <v-dialog
             v-model="dialog"
-            max-width="600px"
+            max-width="500px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -44,7 +28,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                Add New Department
+                Add New Level
               </v-btn>
             </template>
             <v-card>
@@ -61,10 +45,10 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.name"
-                        label="Department name"
+                        v-model="editedItem.grade"
+                        label="Level Name"
                         dense
-                        outlined
+                        outlined 
                       ></v-text-field>
                     </v-col>
                     <v-col
@@ -72,28 +56,27 @@
                       sm="6"
                       md="4"
                     >
-                      <v-combobox
-                        v-model="editedItem.hods"
-                        :items="teachers"
-                        label="Hod"
+                      <v-text-field
+                        v-model="editedItem.level"
+                        label="Level"
                         dense
-                        outlined  
-                        ></v-combobox>
+                        outlined 
+                        type="number"
+                      ></v-text-field>
                     </v-col>
-
+                    
                     <v-col
                       cols="12"
                       sm="6"
                       md="4"
                     >
-                      <v-combobox
-                        v-model="editedItem.teachers"
-                        :items="teachers"
-                        label="Teachers"
+                      <v-text-field
+                        v-model="editedItem.minSubjects"
+                        label="Minimum Subjects"
                         dense
-                        outlined  
-                        multiple
-                        ></v-combobox>
+                        outlined 
+                        type="number"
+                      ></v-text-field>
                     </v-col>
 
                     <v-col
@@ -103,7 +86,7 @@
                     >
                       <v-combobox
                         v-model="editedItem.subjects"
-                        :items="subjects"
+                        :items="subjectsOption"
                         label="Subjects"
                         dense
                         outlined  
@@ -112,14 +95,20 @@
                     </v-col>
                     <v-col
                       cols="12"
+                      sm="6"
+                      md="4"
                     >
-                      <v-textarea
-                        v-model="editedItem.description"
-                        label="Description"
-                      ></v-textarea>
+                     
+                      <v-text-field
+                        v-model="editedItem.passMark"
+                        label="Min Grade"
+                        dense
+                        outlined 
+                        type="number"
+                      ></v-text-field>
                     </v-col>
+                   
                   </v-row>
-                 
                 </v-container>
               </v-card-text>
   
@@ -157,7 +146,7 @@
       </template>
       <template v-slot:item.actions="{ item }">
         
-        <nuxt-link :to='"/departments/"+item.id'>
+        <nuxt-link :to='"/subjects/"+item.id'>
           <v-icon
           small
           class="mr-2"
@@ -180,7 +169,14 @@
           mdi-delete
         </v-icon>
       </template>
-     
+      <template v-slot:no-data>
+        <v-btn
+          color="primary"
+          @click="initialize"
+        >
+          Reset
+        </v-btn>
+      </template>
     </v-data-table>
   </template>
   <script>
@@ -188,40 +184,50 @@
       data: () => ({
         dialog: false,
         dialogDelete: false,
+        subjectsOption:[
+          'Mathematics','Language Art','Science Core','SSS 1'
+        ],
         headers: [
+          
           {
-            text: 'ID',
-            align: 'start',
-            sortable: true,
-            value: '_id',
-          },
-          {
-            text: 'Name',
+            text: 'Level Nmae',
             align: 'start',
             sortable: false,
-            value: 'name',
+            value: 'grade',
           },
+          {
+            text: 'Subjects',
+            align: 'start',
+            sortable: false,
+            value: 'subjects',
+          },
+          { text: 'Levels', value: 'level' },
           
-          
-          { text: 'HOD', value: 'hods' },
-          { text: 'Actions', value: 'actions' },
+          { text: 'Actions', value: 'actions', sortable: false },
         ],
+        subjects: [],
         editedIndex: -1,
         editedItem: {
-          name: '',
-          hods: [],
-          teachers: [],
-          description:'',
-          subjects:[]
+          grade: '',
+          subjects:[],
+          level: 0,
+          passMark:'',
+          minSubjects:1,
         },
         defaultItem: {
-          name: '',
-          hods: [],
-          teachers: [],
-          description:'',
-          subjects:[]
+          grade: '',
+          subjects:[],
+          level: 0,
+          passMark:'',
+          minSubjects:1,
         },
       }),
+  
+      computed: {
+        formTitle () {
+          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        },
+      },
   
       watch: {
         dialog (val) {
@@ -232,75 +238,53 @@
         },
       },
   
-     
-      computed: {
-        formTitle () {
-          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-        },
-        departments(){
-          return this.$store.getters['management/getDepartments']
-        },
-        teachers(){
-          let teachers =this.$store.getters['management/getTeachers']
-          let data=[]
-           teachers.forEach(teacher=>{
-             data.push({ value: teacher._id, text:teacher.staffId + '/'+ teacher.firstName +" " +teacher.lastName},)
-           })
-          
-           return data
-        },
-        subjects(){
-          let s = this.$store.getters['management/getSubjects']
-          let data=[]
-          if(s){
-            s.forEach(subj=>{
-             data.push({ value: subj._id, text:subj.name},)
-           })
-          }
-          console.log(data)
-           return data
-        }
+      created () {
+        this.initialize()
       },
+  
       methods: {
-   
-        editItem (item) {
-          this.editedIndex = this.departments.indexOf(item);
-          this.editedItem = Object.assign({}, item)
-          let ho=[]
-          let su=[]
-          let te=[]
-          if(this.editedItem.hods.length >0){
-              let hod=this.editedItem.hods
-              //h.push(hod._id)
-              ho.push(hod[0]._id)
-          }
-          this.editedItem.hods=ho;
-
-          if(this.editedItem.subjects.length >0){
-            this.editedItem.subjects.forEach(sub=>{
-              su.push({text:sub.name, value:sub._id})
-            })
-          }
-          this.editedItem.subjects=su;
-
-          if(this.editedItem.teachers.length >0){
-            this.editedItem.teachers.forEach(teacher=>{
-              te.push({text:teacher.staffId +'/'+ teacher.firstName,  value:teacher._id})
-            })
-          }
-          this.editedItem.teachers=te;
+        initialize () {
+          this.subjects = [
+            
+            {
+              id:"1",
+              code:'uls',
+              grade: 'Junior Secondary',
+              level: 237,
+              passMark: "awesome"
+            },
+            {
+              id:"2",
+              code:'uls',
+              grade: 'SSS SCIENCE',
+              level: 262,
+              passMark: "awesome descr"
+             
+            },
+            {
+              id:"3",
+              code:'uls',
+              grade: 'SSS ART',
+              level: "awesome"
+            },
           
+          ]
+        },
+  
+        editItem (item) {
+          this.editedIndex = this.subjects.indexOf(item)
+          this.editedItem = Object.assign({}, item)
           this.dialog = true
         },
   
         deleteItem (item) {
-          this.editedIndex = this.departments.indexOf(item)
+          this.editedIndex = this.subjects.indexOf(item)
           this.editedItem = Object.assign({}, item)
           this.dialogDelete = true
         },
   
         deleteItemConfirm () {
-          this.departments.splice(this.editedIndex, 1)
+          this.subjects.splice(this.editedIndex, 1)
           this.closeDelete()
         },
   
@@ -316,36 +300,17 @@
           this.dialogDelete = false
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex =-1
+            this.editedIndex = -1
           })
         },
-        prepData(){
-          let subject=[];
-          let teacher=[];
-          if(this.editedItem.subjects.length>0){
-            this.editedItem.subjects.forEach(sub=>{
-              subject.push({_id:sub.value})
-            })
-            this.editedItem.subjects=subject
-           }
-           if(this.editedItem.teachers.length>0){
-            this.editedItem.teachers.forEach(te=>{
-              teacher.push({_id:te.value})
-            })
-            this.editedItem.teachers=teacher
-           }
-        },
+  
         save () {
-          this.prepData();
           if (this.editedIndex > -1) {
-            this.editedItem.hods=[{_id: this.editedItem.hods.value}]
-            this.$store.dispatch('management/updateDepartment',this.editedItem)
+            Object.assign(this.subjects[this.editedIndex], this.editedItem)
           } else {
-            this.editedItem.hods={_id: this.editedItem.hods.value}
-            this.$store.dispatch('management/addDepartment',this.editedItem)
+            this.subjects.push(this.editedItem)
           }
           this.close()
-          
         },
       },
     }
