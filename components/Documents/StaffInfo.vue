@@ -4,11 +4,10 @@
         <div class="page" >
             <div class="institution">
                 <div class="logo">
-                    <v-img
+                    <img
                     src='https://picsum.photos/250'
-                    aspect-ratio="1"
-                    contain
-                    ></v-img>
+                    class="responsive-img"
+                    />
                 </div>
                 <div class="name mt-3">
                     Goldent Software Sierra Leone Limited
@@ -17,7 +16,7 @@
             <br>
             <div class="center doc-title">Staff Information</div>
 
-            <v-row>
+            <v-row class="mt-20">
                 <v-col cols="3">
                     <ul class="u-list">
                         <li>Staff ID</li>
@@ -49,12 +48,11 @@
                         <li>: Pure Science</li>
                     </ul>
                 </v-col>
-                <v-col cols="3">
-                    <v-img
-                    contain
+                <v-col cols="3" class="h-200">
+                    <img
+                    class="responsive-img"
                     src="https://picsum.photos/200"
-                    aspect-ratio="0.9"
-                    ></v-img>
+                    />
                 </v-col>
             </v-row>
            <div class="info-text pa-5">
@@ -73,9 +71,10 @@
 </div>
 </template>
 <script>
+import Schoollogo from "../schoollogo.vue"
 import footerVue from './footer.vue';
 export default {
-    components:{footerVue},
+    components:{footerVue,Schoollogo},
     props:['selected'],
     data() {
         return {

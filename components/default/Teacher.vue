@@ -1,9 +1,10 @@
 <template>
     <div>
+    
       <v-data-table
         v-model="selected"
         :headers="headers"
-        :items="students"
+        :items="staffs"
         item-key="_id"
         class="elevation-1"
         show-select
@@ -15,44 +16,44 @@
           flat
          >
           <v-toolbar-title>
-            <div v-if="selected.length >0">
-                <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="info"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  Actions
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  @click="printStudentInfo"
-                >
-                  <v-list-item-title>Print Info</v-list-item-title>
-                </v-list-item>
+          <div v-if="selected.length >0">
+        <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="info"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Actions
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          @click="printStaffInfo"
+        >
+          <v-list-item-title>Print Info</v-list-item-title>
+        </v-list-item>
 
-                <v-list-item
-                  @click="generateReport"
-                >
-                  <v-list-item-title>Assign to department</v-list-item-title>
-                </v-list-item>
+        <v-list-item
+          @click="generateReport"
+        >
+          <v-list-item-title>Assign to department</v-list-item-title>
+        </v-list-item>
 
-                <v-list-item
-                  @click="paySlip"
-                >
-                  <v-list-item-title>Print Pay slip</v-list-item-title>
-                </v-list-item>
+        <v-list-item
+          @click="paySlip"
+        >
+          <v-list-item-title>Print Pay slip</v-list-item-title>
+        </v-list-item>
 
-                <v-list-item
-                  @click="generateReport"
-                >
-                  <v-list-item-title><span class="error--text">Delete</span></v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+        <v-list-item
+          @click="generateReport"
+        >
+          <v-list-item-title><span class="error--text">Delete</span></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
           </div>
           </v-toolbar-title>
           <v-divider
@@ -75,17 +76,16 @@
                 color="primary"
                 dark
                 class="mb-2"
-                to="/students/admitstudent"
-                v-on="on"
+                to="/staff/add"
               >
-                Add New Student
+                Add New Staff
               </v-btn>
             </v-toolbar>
           </template>
 
         <template v-slot:item.firstName="{item}">
             <div class="primary--text">
-              <nuxt-link :to='"/students/"+item._id'>
+              <nuxt-link :to='"/staff/"+item._id'>
                 <v-avatar
                   size="36px"
                 >
@@ -98,6 +98,15 @@
                 <span v-if="item">{{item.firstName +" "+ item.lastName}}</span>
                 </nuxt-link>
             </div>
+        </template>
+        <template v-slot:item.dateStarted="{item}">
+          <v-chip
+            class="ma-2"
+            color="info"
+            outlined
+          >
+          {{item.dateStarted | moment("dddd, MMMM Do YYYY")}}
+          </v-chip>
         </template>
 
         <template v-slot:item.actions="{item}">
@@ -124,7 +133,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-           <v-btn icon color="success" :to='"/students/edit/"+item._id'>
+           <v-btn icon color="success" :to='"/staff/edit/"+item._id'>
             <v-icon>mdi-pencil</v-icon>
            </v-btn>
            </div>
@@ -150,25 +159,30 @@
       @hasStartedGeneration="hasStartedGeneration()"
       @hasDownloaded="hasGenerated($event)"
       ref="html2Pdf"
-      >
-        <section slot="pdf-content">
+  >
+    <section slot="pdf-content">
+      <PayroalVue v-if='payroal'/>
 
-          <div v-for="item in selected" :key="item._id">
-          <section class="pdf-item" v-if='studentInfo'>
-            <StudentInfo :selected='item' />
-          </section>
-          <div class="html2pdf__page-break"/>
-        </div>
-        </section>
-    </vue-html2pdf>
+      <div v-for="item in selected" :key="item._id">
+      <section class="pdf-item" v-if='staffInfo'>
+        <StaffInfo :selected='item' />
+      </section>
+      <div class="html2pdf__page-break"/>
+    </div>
+    </section>
+      </vue-html2pdf>
+ 
     </div>
   </template>
   <script>
-  import StudentInfo from '../Documents/StudentInfo.vue';
+  import PayroalVue from '../Documents/Payroal.vue';
+  import StaffInfo from '../Documents/StaffInfo.vue';
     export default {
-      components:{StudentInfo},
+      components:{PayroalVue,StaffInfo},
       data () {
         return {
+          payroal:false,
+          staffInfo:false,
           selected: [],
           search: '',
           fileNmae:'pdf',
@@ -177,64 +191,65 @@
             useCORS: true
           },
           links: [
-            { title: 'Bills and Fees', to:'studentbill'},
+              { title: 'Salary and Lones', to:'salary'},
+              { title: 'Grades and Performance', to:'grade'},
+              { title: 'Attendance', to:'studentattendance'},
+              { title: 'Tasks & Assignment', to:'editStaff'},
+            ],
+          actions: [
+            { title: 'Print Info', fn:'generateReport'},
             { title: 'Grades and Performance', to:'grade'},
-            { title: 'attendance', to:'studentattendance'},
-            { title: 'Click Me 2', to:''},
+            { title: 'Attendance', to:'studentattendance'},
+            { title: 'Tasks & Assignment', to:'editStaff'},
           ],
-          studentInfo:false,
-         
+              
         }
       },
       computed: {
-        students(){
-          return this.$store.getters['management/getStudents'];
+        staffs(){
+          return this.$store.getters['management/getTeachers'];
         },
         headers () {
           return [
           {
-              text: 'StudentID',
+              text: 'StaffID',
               align: 'start',
               sortable: true,
-              value: 'studentId',
+              value: 'staffId',
             },
             {
-              text: 'First Name',
+              text: 'Name',
               align: 'start',
               sortable: false,
               value: 'firstName',
             },
             {
-              text: 'Class',
-              value: 'class',
-              filter: value => {
-                if (!this.class) return true
-  
-                return value < parseInt(this.class)
-              },
+              text: 'Phone',
+              value: 'phone',
+             
             },
-            { text: 'DOB', value: 'dob' },
-            { text: 'Grade/Form', value: 'grade' },
+            { text: 'Date Started', value: 'dateStarted' },
             { text: 'Actions', value: 'actions' },
           ]
         },
       },
       methods: {
-        printStudentInfo () {
-           this.payroal=false,
-           this.studentInfo=true,
-           this.fileNmae="Staff info"
-           this.$refs.html2Pdf.generatePdf()
-        },
+       
         generateReport () {
            this.payroal=true,
-           this.studentInfo=false,
+           this.staffInfo=false,
             this.fileNmae="Payroal"
             this.$refs.html2Pdf.generatePdf()
         },
+        printStaffInfo () {
+           this.payroal=false,
+           this.staffInfo=true,
+           this.fileNmae="Staff info"
+           this.$refs.html2Pdf.generatePdf()
+        },
         paySlip () {
            this.payroal=false,
-           this.studentInfo=true,
+           this.staffInfo=true,
            this.fileNmae="Staff info"
            this.$refs.html2Pdf.generatePdf()
         },

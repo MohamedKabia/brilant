@@ -16,7 +16,7 @@
           flat
          >
           <v-toolbar-title>
-            <div v-if="selected.length >0">
+          <div v-if="selected.length >0">
         <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -54,7 +54,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-      </div>
+          </div>
           </v-toolbar-title>
           <v-divider
             class="mx-4"
@@ -170,7 +170,7 @@
       <div class="html2pdf__page-break"/>
     </div>
     </section>
-  </vue-html2pdf>
+      </vue-html2pdf>
  
     </div>
   </template>
@@ -189,7 +189,7 @@
           html2canvas: {
             scale: 1,
             useCORS: true
-        },
+          },
           links: [
               { title: 'Salary and Lones', to:'salary'},
               { title: 'Grades and Performance', to:'grade'},
@@ -234,8 +234,7 @@
         },
       },
       methods: {
-        view(val){
-        },
+       
         generateReport () {
            this.payroal=true,
            this.staffInfo=false,

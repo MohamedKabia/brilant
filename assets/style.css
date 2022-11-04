@@ -69,8 +69,8 @@
 
 }
 .institution .logo{
-    width: 4.1cm;/*30%*/
-    height: 4.1cm;
+    width: 5.1cm;/*30%*/
+    height: 5.1cm;
     margin: auto;
     
 
@@ -118,4 +118,15 @@
  }
  .stamp-area{
     height: 350px;
+ }
+ .responsive-img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+ }
+ .h-200{
+    height: 200px;
+ }
+ .mt-20{
+    margin-top: 40px !important;
  }
