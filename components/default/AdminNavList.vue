@@ -55,7 +55,7 @@
             { title: 'Add Staff', to:'/staff/add' },
             { title: 'Teachers', to:'/staff/teachers' },
           ],
-          title: 'Staffs',
+          title: 'Staff',
         },
        
         {
@@ -69,9 +69,9 @@
         {
           action: 'mdi-town-hall',
           items: [
-            { title: 'School Levels', to:'/setup/schools' },
-            { title: 'Clases Group', to:'/setup/clases' },
-            { title: 'Levels', to:'/setup/levels' }
+            { title: 'School Levels', to:'/setup/schools'},
+            { title: 'Clases Group', to:'/setup/clases'},
+            { title: 'Levels', to:'/setup/levels'}
         ],
           title: 'School Setup',
         },

@@ -1,5 +1,6 @@
 <template>
     <div>
+    
       <v-data-table
         v-model="selected"
         :headers="headers"
@@ -14,7 +15,47 @@
         <v-toolbar
           flat
          >
-          <v-toolbar-title>Students</v-toolbar-title>
+          <v-toolbar-title>
+            <div v-if="selected.length >0">
+        <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="info"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Actions
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          @click="printStaffInfo"
+        >
+          <v-list-item-title>Print Info</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          @click="generateReport"
+        >
+          <v-list-item-title>Assign to department</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          @click="paySlip"
+        >
+          <v-list-item-title>Print Pay slip</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          @click="generateReport"
+        >
+          <v-list-item-title><span class="error--text">Delete</span></v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+      </div>
+          </v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -35,10 +76,9 @@
                 color="primary"
                 dark
                 class="mb-2"
-                to="/staffs/admitstudent"
-                v-on="on"
+                to="/staff/add"
               >
-                Add New Student
+                Add New Staff
               </v-btn>
             </v-toolbar>
           </template>
@@ -58,6 +98,15 @@
                 <span v-if="item">{{item.firstName +" "+ item.lastName}}</span>
                 </nuxt-link>
             </div>
+        </template>
+        <template v-slot:item.dateStarted="{item}">
+          <v-chip
+            class="ma-2"
+            color="info"
+            outlined
+          >
+          {{item.dateStarted | moment("dddd, MMMM Do YYYY")}}
+          </v-chip>
         </template>
 
         <template v-slot:item.actions="{item}">
@@ -92,21 +141,68 @@
         
 
       </v-data-table>
+      <vue-html2pdf
+      :show-layout="false"
+      :float-layout="true"
+      :enable-download="false"
+      :preview-modal="true"
+      :paginate-elements-by-height="1100"
+      :pdf-quality="2"
+      :filename="fileNmae"
+      :manual-pagination="false"
+      pdf-format="a4"
+      pdf-orientation="portrait"
+      pdf-content-width="100%"
+      :html2canvas="html2canvas"
+
+      @progress="onProgress($event)"
+      @hasStartedGeneration="hasStartedGeneration()"
+      @hasDownloaded="hasGenerated($event)"
+      ref="html2Pdf"
+  >
+    <section slot="pdf-content">
+      <PayroalVue v-if='payroal'/>
+
+      <div v-for="item in selected" :key="item._id">
+      <section class="pdf-item" v-if='staffInfo'>
+        <StaffInfo :selected='item' />
+      </section>
+      <div class="html2pdf__page-break"/>
+    </div>
+    </section>
+  </vue-html2pdf>
+ 
     </div>
   </template>
   <script>
+  import PayroalVue from '../Documents/Payroal.vue';
+  import StaffInfo from '../Documents/StaffInfo.vue';
     export default {
+      components:{PayroalVue,StaffInfo},
       data () {
         return {
-        selected: [],
+          payroal:false,
+          staffInfo:false,
+          selected: [],
           search: '',
+          fileNmae:'pdf',
+          html2canvas: {
+            scale: 1,
+            useCORS: true
+        },
           links: [
-        { title: 'Salary and Lones', to:'salary'},
-        { title: 'Grades and Performance', to:'grade'},
-        { title: 'Attendance', to:'studentattendance'},
-        { title: 'Tasks & Assignment', to:'editStaff'},
-      ],
-          
+              { title: 'Salary and Lones', to:'salary'},
+              { title: 'Grades and Performance', to:'grade'},
+              { title: 'Attendance', to:'studentattendance'},
+              { title: 'Tasks & Assignment', to:'editStaff'},
+            ],
+          actions: [
+            { title: 'Print Info', fn:'generateReport'},
+            { title: 'Grades and Performance', to:'grade'},
+            { title: 'Attendance', to:'studentattendance'},
+            { title: 'Tasks & Assignment', to:'editStaff'},
+          ],
+              
         }
       },
       computed: {
@@ -128,17 +224,44 @@
               value: 'firstName',
             },
             {
-              text: 'Department',
-              value: 'department',
+              text: 'Phone',
+              value: 'phone',
              
             },
-            { text: 'DOB', value: 'dob' },
+            { text: 'Date Started', value: 'dateStarted' },
             { text: 'Actions', value: 'actions' },
           ]
         },
       },
       methods: {
         view(val){
+        },
+        generateReport () {
+           this.payroal=true,
+           this.staffInfo=false,
+            this.fileNmae="Payroal"
+            this.$refs.html2Pdf.generatePdf()
+        },
+        printStaffInfo () {
+           this.payroal=false,
+           this.staffInfo=true,
+           this.fileNmae="Staff info"
+           this.$refs.html2Pdf.generatePdf()
+        },
+        paySlip () {
+           this.payroal=false,
+           this.staffInfo=true,
+           this.fileNmae="Staff info"
+           this.$refs.html2Pdf.generatePdf()
+        },
+        hasGenerated(){
+        
+        },
+        onProgress(e){
+          console.log(e)
+        },
+        hasStartedGeneration(e){
+          console.log(e)
         }
       },
     }
