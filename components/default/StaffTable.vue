@@ -44,7 +44,7 @@
         <v-list-item
           @click="paySlip"
         >
-          <v-list-item-title>Print Pay slip</v-list-item-title>
+          <v-list-item-title>Print Payslip</v-list-item-title>
         </v-list-item>
 
         <v-list-item
@@ -141,6 +141,7 @@
         
 
       </v-data-table>
+      <PayroalVue :selected='selected[0]'/>
       <vue-html2pdf
       :show-layout="false"
       :float-layout="true"
@@ -161,7 +162,12 @@
       ref="html2Pdf"
   >
     <section slot="pdf-content">
-      <PayroalVue v-if='payroal'/>
+      <div v-for="item in selected" :key="item._id">
+        <section class="pdf-item" v-if='payroal'>
+          <PayroalVue :selected='item' v-if='payroal'/>
+        </section>
+        <div class="html2pdf__page-break"/>
+      </div>
 
       <div v-for="item in selected" :key="item._id">
       <section class="pdf-item" v-if='staffInfo'>
@@ -175,7 +181,7 @@
     </div>
   </template>
   <script>
-  import PayroalVue from '../Documents/Payroal.vue';
+  import PayroalVue from '../Documents/Payslip.vue';
   import StaffInfo from '../Documents/StaffInfo.vue';
     export default {
       components:{PayroalVue,StaffInfo},
@@ -248,8 +254,8 @@
            this.$refs.html2Pdf.generatePdf()
         },
         paySlip () {
-           this.payroal=false,
-           this.staffInfo=true,
+           this.payroal=true,
+           this.staffInfo=false,
            this.fileNmae="Staff info"
            this.$refs.html2Pdf.generatePdf()
         },

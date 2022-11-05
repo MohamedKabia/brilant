@@ -130,3 +130,9 @@
  .mt-20{
     margin-top: 40px !important;
  }
+ .pa-20{
+    padding-right: 20px;
+ }
+ .right-text{
+    text-align: right;
+ }

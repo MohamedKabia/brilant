@@ -44,7 +44,7 @@
         <v-list-item
           @click="paySlip"
         >
-          <v-list-item-title>Print Pay slip</v-list-item-title>
+          <v-list-item-title>Print Payslip</v-list-item-title>
         </v-list-item>
 
         <v-list-item
@@ -175,7 +175,7 @@
     </div>
   </template>
   <script>
-  import PayroalVue from '../Documents/Payroal.vue';
+  import PayroalVue from '../Documents/Payslip.vue';
   import StaffInfo from '../Documents/StaffInfo.vue';
     export default {
       components:{PayroalVue,StaffInfo},

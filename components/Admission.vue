@@ -260,8 +260,9 @@
         </v-container>
     </div>
 </template>
+
 <script>
-    import DatePicker from "./default/DatePicker.vue"
+import DatePicker from "./default/DatePicker.vue"
 export default {
     components:{DatePicker},
     data() {
