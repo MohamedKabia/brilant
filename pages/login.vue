@@ -1,58 +1,34 @@
 <template>
     <div>
         <v-container>
-            
                 <v-row>
                 <v-col cols="12" sm="10" class="offset-sm-1">
-                    <v-card>
+                    <v-card flat>
                         <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="6" class="primary light">
-                           <div class="center">
-                            <h1 class="mb-5">{{title}}</h1>
-                            <div class="mt-4" v-if="loginType !='Student Login'">
-                                <div>
-                                    Are you a student?  
-                                    <v-btn text color="info" dense @click="selectLoginType('Student Login')">login as student</v-btn>
-                                </div>
-                            </div>
+                            <v-row class="align-center">
+                                <v-col cols="12" sm="6" class="primary light pattern-bg vh-90">
+                                
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <div class="center">
+                                    <h1 class="mb-5">{{title}}</h1>
 
-                            <div class="mt-4" v-if="loginType !='Parent Login'">
-                                <div>
-                                    Are you a parent?  
-                                    <v-btn text color="info" dense @click="selectLoginType('Parent Login')">login as Parent</v-btn>
-                                </div>
-                            </div>
-                            
-                           </div>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-form>
-                                <v-text-field
-                                    class="text-uppercase"
-                                    v-model="staffId"
+                                    <div class="d-flex justify-center align-center">
+                                        <v-btn-toggle
+                                        rounded
+                                        >
+                                        <v-btn to="/stafflogin" color="primary">Staff <v-icon>mdi-account-hard-hat-outline</v-icon></v-btn>
+                                        <v-btn to="/studentlogin" color="info">Student <v-icon>mdi-account-school-outline</v-icon></v-btn>
+                                        <v-btn to="/parentlogin" color="secondary">Parent <v-icon>mdi-account-multiple-outline</v-icon></v-btn>
+                                        </v-btn-toggle>
+                                    </div>
+                                    </div>
                                     
-                                    label="Staf ID"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-                                <v-text-field
-                                    class="text-uppercase"
-                                    v-model="password"
-                                    
-                                    label="Password"
-                                    outlined
-                                    dense
-                                ></v-text-field>
-
-                                <v-btn color="primary" dense @click="login">
-                                    Login <v-icon>mdi-account</v-icon>
-                                </v-btn>
-                            </v-form>
-                        </v-col>
-                    </v-row>
+                                   
+                                </v-col>
+                            </v-row>
                         </v-card-text>
-                </v-card>
+                    </v-card>
                 </v-col>
                 </v-row>
        
@@ -63,10 +39,7 @@
 export default {
     data() {
         return {
-            staffId:null,
-            password:null,
-            title:"Staff Login",
-            loginType:'Staff Login'
+            title:"Select Login Type",
         }
     },
     computed: {
@@ -75,10 +48,7 @@ export default {
         }
 	},
     methods: {
-        selectLoginType(val){
-            this.loginType=val;
-            this.title=val
-        },
+       
         login(){
            let  data={
             staffId:this.staffId,

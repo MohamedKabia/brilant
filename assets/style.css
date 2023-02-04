@@ -136,3 +136,11 @@
  .right-text{
     text-align: right;
  }
+ .vh-90{
+    height: 90vh;
+ }
+ .pattern-bg{
+    background:url(../static/pattern.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+ }

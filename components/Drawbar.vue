@@ -11,7 +11,7 @@
     >
     <userAvatarVue/>
       <StudentNavList v-if="false"/>
-      <AdminNavList v-if="roles.includes('Admin')" />
+      <AdminNavList />
       <staffNavListVue v-if="roles.includes('Staff')" />
       <v-list v-if="false">
         <v-list-item
