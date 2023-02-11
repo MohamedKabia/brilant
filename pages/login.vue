@@ -23,8 +23,6 @@
                                         </v-btn-toggle>
                                     </div>
                                     </div>
-                                    
-                                   
                                 </v-col>
                             </v-row>
                         </v-card-text>

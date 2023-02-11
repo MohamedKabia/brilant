@@ -144,3 +144,10 @@
     background-size: cover;
     background-repeat: no-repeat;
  }
+ .school{
+    height: 150px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+ }

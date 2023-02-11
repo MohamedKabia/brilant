@@ -11,7 +11,7 @@
     >
     <userAvatarVue/>
       <StudentNavList v-if="false"/>
-      <AdminNavList />
+      <AdminNavList  />
       <staffNavListVue v-if="roles.includes('Staff')" />
       <v-list v-if="false">
         <v-list-item
@@ -78,12 +78,15 @@
             return this.$store.getters['account/getUser']
         },
         roles(){
-          let  userRoles=[];
-          let roles =this.user.roles;
-          roles.forEach(role => {
-            userRoles.push(role.role)
-          });
-          return userRoles
+          /*let  userRoles=[];
+          if(this.user){
+              let roles =this.user.roles;
+              roles.forEach(role => {
+                userRoles.push(role.role)
+              });
+              return userRoles
+          }*/
+          return []
         }
 	    },
       mounted() {

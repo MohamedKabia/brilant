@@ -61,12 +61,35 @@
                 </v-row>
        
         </v-container>
+
+        <v-dialog
+            v-model="dialog"
+            max-width="600px"
+          >
+          <v-card>
+            <v-row class="justify-center align-center" >
+                <v-col md="4" cols="12">
+                    <div class="school" @click="selectSchool('val')">
+                        <v-avatar>
+                            <v-img src="/logo" />
+                        </v-avatar>
+                    <div class="name">
+                        Brilant Secondary School
+                    </div>
+                    </div>
+
+                </v-col>
+            </v-row>
+          </v-card>
+        </v-dialog>
+
     </div>
 </template>
 <script>
 export default {
     data() {
         return {
+            dialog:false, 
             staffId:null,
             password:null,
             title:"Staff Login",
@@ -75,10 +98,15 @@ export default {
     computed: {
         user(){
             return this.$store.getters['account/getUser']
+        },
+        Schools(){
+            return this.$store.getters['school/getSchools']
         }
 	},
     methods: {
-        
+        selectSchool(val){
+            console.log("school")
+        },
         login(){
            let  data={
             staffId:this.staffId,
@@ -90,7 +118,11 @@ export default {
     watch: {
 		user(val){
 			if(val){
-				this.$router.push('/') 
+				if(val.role=="Admin"){
+                    this.$router.push('/') 
+                }else{
+                    this.dialog =true;
+                }
 			}
 			
 		}
