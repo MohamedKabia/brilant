@@ -1,7 +1,7 @@
 import { baseUrl } from "./base";
 export const state = () => ({
         schools:[],
-        school:[],
+        school:null,
      });
 export const  mutations= { 
         pushData(state,payload){
@@ -31,9 +31,9 @@ export const  mutations= {
         getSchools({commit},payload){
             let id=payload._id
             this.$axios
-            .$post(`${baseUrl}/api/school/get/`)
+            .$get(`${baseUrl}/api/school/get`)
             .then((response) => {
-                commit("pushData", {itemsName:"staff",data:response});
+                commit("setData", {itemsName:"schools",data:response});
             });
         },
        
@@ -45,14 +45,15 @@ export const  mutations= {
                 //commit("pushData", {itemsName:"staff",data:response});
             });
         },
+
   
     };
     export const getters= { 
         schools(state){
-            return state.studentBills
+            return state.schools
         },
         school(state){
-            return state.fees;
+            return state.school;
         },
     }
   

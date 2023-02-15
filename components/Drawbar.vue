@@ -10,9 +10,9 @@
       v-if="user"
     >
     <userAvatarVue/>
-      <StudentNavList v-if="false"/>
-      <AdminNavList  />
-      <staffNavListVue v-if="roles.includes('Staff')" />
+      <StudentNavList v-if="user.role=='Student'"/>
+      <AdminNavList  v-if="user.role=='Admin'"/>
+      <staffNavListVue v-if="user.role=='Staff'" />
       <v-list v-if="false">
         <v-list-item
           v-for="(item, i) in items"

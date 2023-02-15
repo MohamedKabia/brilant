@@ -27,6 +27,7 @@
       </div>
 
       <v-list-item v-for="item in staffItem" :key="item.to" :to="item.to">
+       
         <v-list-item-icon>
           <v-icon>{{item.icon}}</v-icon>
         </v-list-item-icon>
@@ -94,12 +95,11 @@
             return this.$store.getters['account/getUser']
         },
         roles(){
-          let  userRoles=[];
-          let roles =this.user.roles;
-          roles.forEach(role => {
-            userRoles.push(role.role)
-          });
-          return userRoles
+          let  school= this.$store.getters['school/school']
+          if(school){
+            console.log(school);
+            return school.roles
+          }else return []
         }
 	    },
   }

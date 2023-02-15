@@ -64,28 +64,38 @@
 
         <v-dialog
             v-model="dialog"
-            max-width="600px"
+            width="600px"
+            persistent
           >
           <v-card>
-            <v-row class="justify-center align-center" >
-                <v-col md="4" cols="12">
-                    <div class="school" @click="selectSchool('val')">
-                        <v-avatar>
-                            <v-img src="/logo" />
-                        </v-avatar>
-                    <div class="name">
-                        Brilant Secondary School
-                    </div>
-                    </div>
-
-                </v-col>
-            </v-row>
+            <div v-if="staffSchools">
+                <v-row class="justify-center align-center"  >
+                    <v-col md="4" cols="12" v-for="school in staffSchools" :key="school._id">
+                    <v-card-text>
+                        <div class="school" @click="selectSchool(school)">
+                            <v-avatar
+                            size="56"
+                            class="mt-3 mb-3"
+                            >
+                                <img src="/logo.jpeg"/>
+                            </v-avatar>
+                        <div class="name capitalised">
+                            {{school.name}}
+                            <v-divider color="primary mt-1 mb-1"></v-divider>
+                            <small>{{ school.displayName }}</small>
+                        </div>
+                        </div>
+                    </v-card-text>
+                    </v-col>
+                </v-row>
+            </div>
           </v-card>
         </v-dialog>
 
     </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 export default {
     data() {
         return {
@@ -99,13 +109,31 @@ export default {
         user(){
             return this.$store.getters['account/getUser']
         },
-        Schools(){
-            return this.$store.getters['school/getSchools']
+        schools(){
+            return this.$store.getters['school/schools']
+        },
+        staffSchools(){
+            if(this.schools && this.user){
+                const schools =this.schools.filter(school =>
+                    this.user.schools.some(uschool => uschool.school == school._id)
+                );
+                return schools
+            }
+            else return null
         }
 	},
     methods: {
         selectSchool(val){
-            console.log("school")
+            let newVal =JSON.stringify(val)
+            window.localStorage.setItem("Sschool", newVal);
+            
+            let data={
+                roles:["Staff","Accountant"],
+                ...val
+            }
+            this.$store.commit('school/setData',{itemsName:"school",data});
+            if(this.user.role !="Admin"){this.$store.dispatch('account/getData',newVal);}
+            this.dialog=false;
         },
         login(){
            let  data={
