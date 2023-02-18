@@ -17,7 +17,7 @@
                 >
                 
             </v-avatar>
-            <span v-if="item">{{item.hods[0].firstName +" "+ item.hods[0].lastName}}</span>
+            <span v-if="item.hods[0]">{{item.hods[0].firstName +" "+ item.hods[0].lastName}}</span>
             </nuxt-link>
           </div>
         </template>
@@ -32,116 +32,20 @@
             vertical
           ></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog
-            v-model="dialog"
-            max-width="600px"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
+          
+              <div>
+                <v-btn
                 color="primary"
                 dark
                 class="mb-2"
-                v-bind="attrs"
-                v-on="on"
+                @click="createDialog = !createDialog"
               >
                 Add New Department
               </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-  
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Department name"
-                        dense
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-combobox
-                        v-model="editedItem.hods"
-                        :items="teachers"
-                        label="Hod"
-                        dense
-                        outlined  
-                        ></v-combobox>
-                    </v-col>
-
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-combobox
-                        v-model="editedItem.teachers"
-                        :items="teachers"
-                        label="Teachers"
-                        dense
-                        outlined  
-                        multiple
-                        ></v-combobox>
-                    </v-col>
-
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-combobox
-                        v-model="editedItem.subjects"
-                        :items="subjects"
-                        label="Subjects"
-                        dense
-                        outlined  
-                        multiple
-                        ></v-combobox>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <v-textarea
-                        v-model="editedItem.description"
-                        label="Description"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                 
-                </v-container>
-              </v-card-text>
-  
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="secondary darken-1"
-                  text
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+              <CreateDepartment :dialog="createDialog" @update:option="closeDialog"/>
+              </div>
+           
+         
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
@@ -184,8 +88,11 @@
     </v-data-table>
   </template>
   <script>
+  import CreateDepartment from './DepartmentComponents/create.vue'
     export default {
+      components:{CreateDepartment},
       data: () => ({
+        createDialog:false,
         dialog: false,
         dialogDelete: false,
         headers: [
@@ -241,11 +148,13 @@
           return this.$store.getters['management/getDepartments']
         },
         teachers(){
-          let teachers =this.$store.getters['management/getTeachers']
+          let teachers =null//this.$store.getters['management/getTeachers']
           let data=[]
-           teachers.forEach(teacher=>{
+           if(teachers){
+            teachers.forEach(teacher=>{
              data.push({ value: teacher._id, text:teacher.staffId + '/'+ teacher.firstName +" " +teacher.lastName},)
            })
+           }
           
            return data
         },
@@ -262,7 +171,9 @@
         }
       },
       methods: {
-   
+        closeDialog(){
+          this.createDialog=false;
+        },
         editItem (item) {
           this.editedIndex = this.departments.indexOf(item);
           this.editedItem = Object.assign({}, item)

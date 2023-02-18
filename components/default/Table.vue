@@ -76,7 +76,6 @@
                 dark
                 class="mb-2"
                 to="/students/admitstudent"
-                v-on="on"
               >
                 Add New Student
               </v-btn>

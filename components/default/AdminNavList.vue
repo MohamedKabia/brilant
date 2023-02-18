@@ -69,11 +69,12 @@
         {
           action: 'mdi-town-hall',
           items: [
-            { title: 'School Levels', to:'/setup/schools'},
-            { title: 'Clases Group', to:'/setup/clases'},
-            { title: 'Levels', to:'/setup/levels'}
+            { title: 'Schools', to:'/setup/schools'},
+            { title: 'Department', to:'/setup/departments'},
+            { title: 'Clases', to:'/setup/classes'},
+            { title: 'Levels/Grade', to:'/setup/levels'}
         ],
-          title: 'School Setup',
+          title: 'Setup',
         },
         {
           action: 'mdi-book',

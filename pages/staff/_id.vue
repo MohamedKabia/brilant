@@ -11,9 +11,9 @@
                         <h3>{{staff.jobTitle}}</h3>
                     </div>
                 </v-col>
-                <v-col cols="12" sm="8">
+                <v-col cols="12" sm="9">
                     <v-row>
-                        <v-col cols="5">
+                        <v-col cols="3">
                             <ul class="u-list">
                                 <li>Staff ID</li>
                                 <li>Name</li>
@@ -26,7 +26,7 @@
                             </ul>
                         </v-col>
 
-                        <v-col cols="4">
+                        <v-col cols="5">
                             <ul class="u-list">
                                 <li>:{{staff.staffId}}</li>
                                 <li>:{{staff.firstName}} <span v-if="staff.middleName">{{staff.middleName}}</span> {{staff.lastName}}</li>
@@ -38,15 +38,21 @@
                                 <li>: <span v-if="staff.department">{{staff.department.name}}</span> </li>
                             </ul>
                         </v-col>
-                        <v-col cols="12" sm="3" v-if="admin">
+                        <v-col cols="12" sm="4" v-if="admin">
                             <v-combobox
-                                    v-model="staff.role"
-                                    :items="roles"
-                                    label="Acess Level"
-                                    dense
-                                    outlined  
-                                    @change="roleChange"
-                                ></v-combobox>
+                                v-model="staff.role"
+                                :items="roles"
+                                label="Acess Level"
+                                dense
+                                outlined  
+                                @change="roleChange"
+                            ></v-combobox>
+                            <v-btn
+                                dense
+                                outlined  
+                                @click="dialog=!dialog"
+                                color="info"
+                            > Process</v-btn>
                         </v-col>
                     </v-row>
                    
@@ -94,38 +100,19 @@
                         </v-card-text>
                     </v-card>
                 </v-col>
-
-                <v-col cols="12" md="4" sm="6">
-                    <v-card>
-                        <v-toolbar class="info" dark>
-                            <v-card-title >
-                          Emergency Contacts
-                        </v-card-title>
-                        </v-toolbar>
-                        <v-card-text>
-                            <h4>Primary</h4>
-                            <p> Name :{{staff.emergencyContact[0].e1.name}}</p>
-                            <p> Phone :{{staff.emergencyContact[0].e1.phone}}</p>
-                            <p> Relationship :{{staff.emergencyContact[0].e1.relationship}}</p>
-                            <p> Address :{{staff.emergencyContact[0].e1.address}}</p>
-
-                            <h4>Secondary</h4>
-                            <p> Name :{{staff.emergencyContact[0].e2.name}}</p>
-                            <p> Phone :{{staff.emergencyContact[0].e2.phone}}</p>
-                            <p> Relationship :{{staff.emergencyContact[0].e2.relationship}}</p>
-                            <p> Address :{{staff.emergencyContact[0].e2.address}}</p>
-                        </v-card-text>
-                    </v-card>
-                </v-col>
             </v-row>
+            <processDiologVue :dialog="dialog" @update:option="closeDialog"/>
         </v-container>
     </div>
 </template>
 <script>
+    import processDiologVue from '../../components/StaffComponents/processDiolog.vue'
 export default {
+    components:{processDiologVue},
     data() {
         return {
-            roles:['Staff','Admin']
+            roles:['Staff','Admin'],
+            dialog:false,
         }
     },
     computed: {
@@ -155,6 +142,9 @@ export default {
     methods: {
         roleChange(){
             this.$store.dispatch('management/updateStaff', this.staff)
+        },
+        closeDialog(){
+            this.dialog=false
         }
     },
 }

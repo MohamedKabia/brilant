@@ -45,12 +45,21 @@ export const  mutations= {
             })
         },
         
-        addStaff({commit},payload){
+        addStaff({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
             this.$axios
-            .$post(`${baseUrl}/api/staff/create`, payload)
+            .$post(`${baseUrl}/api/single/staffpp`, payload.pp)
             .then((response) => {
-                commit("pushData", {itemsName:"staff",data:response});
+               payload.data.pp=response.pp;
+               this.$axios
+            .$post(`${baseUrl}/api/staff/create`, payload.data)
+            .then((response) => {
+                commit("pushData", {itemsName:"staff",data:response.data});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
             });
+            });
+
         },
 
         addStudent({commit},payload){
@@ -151,6 +160,7 @@ export const  mutations= {
                 },
               })
               .then((response) => {
+                console.log(response)
                 commit("setData", {itemsName:"students",data:response});
               })
           },
@@ -184,8 +194,11 @@ export const  mutations= {
         getSubjects(state){
             return state.subjects;
         },
-        getStaffById(state){
-            return state.st
+        getStaffById:(state) => (id) => {
+            return state.staff.find((st) => st._id === id);
+        },
+        baseUrl(){
+            return baseUrl
         },
         getTeachers(state){
            let teachers = state.staff.map((staff) => {

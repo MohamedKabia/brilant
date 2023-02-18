@@ -285,9 +285,9 @@ export default {
 			{ value: "Female", text: "Female" },
 			],
             programOptions: [
-			{ value: "jss1", text: "JSS1" },
-			{ value: "jss2", text: "JSS2" },
-			{ value: "JSS3", text: "JSS3" },
+                { value: "jss1", text: "JSS1" },
+                { value: "jss2", text: "JSS2" },
+                { value: "JSS3", text: "JSS3" },
 			],
 
             dateStarted:null,
