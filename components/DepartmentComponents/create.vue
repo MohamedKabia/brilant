@@ -6,65 +6,59 @@
             persistent
              >
             <v-card>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12"  class="offset-md-2">
-                            <v-form>
-                    <v-row>
-                        <v-col cols="12" md="6">
-                                <v-text-field
-                                    class="text-uppercase"
-                                    v-model="name"
-                                    :rules="required"
-                                    label="Name"
-                                    outlined
-                                    required
+                <v-card-text class="pt-5 pb-5">
+                    <v-form>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                    <v-text-field
+                                        class="text-uppercase"
+                                        v-model="name"
+                                        :rules="required"
+                                        label="Name"
+                                        outlined
+                                        required
+                                        dense
+                                    ></v-text-field>
+                                </v-col>
+                                
+                                <v-col cols="12" md="6">
+                                    <v-combobox
+                                    v-model="hod"
+                                    :items="teachersOptions"
+                                    label="HOD"
                                     dense
-                                 ></v-text-field>
-                            </v-col>
-                            
-                            <v-col cols="12" md="6">
-                                <v-combobox
-                                v-model="hod"
-                                :items="teachersOptions"
-                                label="HOD"
-                                dense
-                                outlined 
-                                :rules="required" 
-                                ></v-combobox>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-combobox
-                                v-model="teachers"
-                                :items="teachersOptions"
-                                label="Teachers"
-                                dense
-                                outlined 
-                                multiple 
-                                ></v-combobox>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-combobox
-                                v-model="subjects"
-                                :items="subjectsOptions"
-                                label="Subject"
-                                dense
-                                outlined 
-                                multiple 
-                                :rules="required"
-                                ></v-combobox>
-                            </v-col>
-                    </v-row>
-                    <v-btn color="primary">
-                        Save <v-icon>mdi-kite</v-icon>
-                    </v-btn>
+                                    outlined 
+                                    :rules="required" 
+                                    ></v-combobox>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-combobox
+                                    v-model="teachers"
+                                    :items="teachersOptions"
+                                    label="Teachers"
+                                    dense
+                                    outlined 
+                                    multiple 
+                                    ></v-combobox>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-combobox
+                                    v-model="subjects"
+                                    :items="subjectsOptions"
+                                    label="Subject"
+                                    dense
+                                    outlined 
+                                    multiple 
+                                    :rules="required"
+                                    ></v-combobox>
+                                </v-col>
+                        </v-row>
+                        <v-card-actions>
+                            <v-btn color="primary">Save <v-icon>mdi-kite</v-icon></v-btn> 
+                            <v-btn outlined color="secondary" @click="close" class="ml-5">Close</v-btn>
+                        </v-card-actions>
                    </v-form>
-                        </v-col>
-                    </v-row>
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn color="secondary" @click="close">Close</v-btn>
-                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>

@@ -100,6 +100,7 @@ export const   actions= {
         //general daters
         dispatch('settings/getlevels',token,{root:true});
         dispatch('settings/getPrograms',token,{root:true});
+        dispatch('school/getSchools',token,{root:true});
         //get data based on staff roles 
             if( school.roles.includes('Admin')){
                 dispatch('management/getdepartments',token,{root:true});

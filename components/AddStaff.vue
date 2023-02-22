@@ -6,24 +6,24 @@
                 <v-row>
                     <v-col cols="12" sm="4" md="3">
                         <v-img
-                    :src="preview"
-                    aspect-ratio="0.9"
-                    >
-                    <v-file-input  
-                        class="d-none"
-                        v-model="image"
-                        id="fileUpload" 
-                        :rules="required"
-                        type="file" hidden 
-                        @change="preview_image" 
-                        
-                        accept='image/x-png,image/gif,image/jpeg'/>
+                            :src="preview"
+                            aspect-ratio="0.9"
+                            >
+                            <v-file-input  
+                                class="d-none"
+                                v-model="image"
+                                id="fileUpload" 
+                                :rules="required"
+                                type="file" hidden 
+                                @change="preview_image" 
+                                
+                                accept='image/x-png,image/gif,image/jpeg'/>
 
-                        
-                    <v-btn icon color="primary" @click="chooseFiles">
-                        <v-icon>mdi-camera</v-icon>
-                    </v-btn>
-                </v-img>
+                                
+                            <v-btn icon color="primary" @click="chooseFiles">
+                                <v-icon>mdi-camera</v-icon>
+                            </v-btn>
+                        </v-img>
                     </v-col>
                     <v-col cols="12" sm="8" md="8">
                         <v-row>

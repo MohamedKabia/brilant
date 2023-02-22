@@ -27,14 +27,57 @@ export const  mutations= {
         }
      };
      export const    actions= {  
-       
         getSchools({commit},payload){
-            let id=payload._id
             this.$axios
             .$get(`${baseUrl}/api/school/get`)
             .then((response) => {
                 commit("setData", {itemsName:"schools",data:response});
             });
+        },
+
+        createSchool({commit},payload){
+            if(payload.formData){
+                this.$axios
+                .$post(`${baseUrl}/api/single/badg`,payload.formData)
+                .then((response) => {
+                    payload.payload.badg=response.pp;
+                    this.$axios
+                    .$post(`${baseUrl}/api/school/create`,payload.payload)
+                    .then((response) => {
+                        commit("setData", {itemsName:"schools",data:response});
+                    });
+                });
+            }else{
+                this.$axios
+                .$post(`${baseUrl}/api/school/create`,payload.payload)
+                .then((response) => {
+                    commit("setData", {itemsName:"schools",data:response});
+                });
+            }
+
+            
+        },
+        update({commit},payload){
+            if(payload.formData){
+                this.$axios
+                .$post(`${baseUrl}/api/single/badg`,payload.formData)
+                .then((response) => {
+                    payload.payload.badg=response.pp;
+                    this.$axios
+                    .$post(`${baseUrl}/api/school/update/${payload._id}`,payload.payload)
+                    .then((response) => {
+                        commit("setData", {itemsName:"schools",data:response});
+                    });
+                });
+            }else{
+                this.$axios
+                .$post(`${baseUrl}/api/school/update/${payload._id}`,payload.payload)
+                .then((response) => {
+                    commit("setData", {itemsName:"schools",data:response});
+                });
+            }
+
+            
         },
        
         deleteSchool({dispatch,commit},payload){

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <v-containe>
+        <v-container>
             
            <Department/>
             <CreateSchool :dialog="dialog" @update:option="closeDialog"/>
-        </v-containe>
+        </v-container>
     </div>
 </template>
 <script>

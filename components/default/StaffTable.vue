@@ -92,7 +92,7 @@
                 size="36px"
               >
                 <img
-                  :src='baseurl+"/"+item.pp'
+                  :src='baseUrl+"/"+item.pp'
                 >
                 
               </v-avatar>
@@ -209,7 +209,6 @@ import StaffInfo from '../Documents/StaffInfo.vue';
         dialogDelete: false,
         progressDialog:false,
         progress:0,
-        baseurl:'http://localhost:5000',
         payroal:false,
         staffInfo:false,
         selected: [],
@@ -238,6 +237,9 @@ import StaffInfo from '../Documents/StaffInfo.vue';
     computed: {
       staffs(){
         return this.$store.getters['management/getStaff'];
+      },
+      baseUrl(){
+        return this.$store.getters['management/baseUrl']
       },
       headers () {
         return [

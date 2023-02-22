@@ -58,13 +58,6 @@
           title: 'Staff',
         },
        
-        {
-          action: 'mdi-shape-outline',
-          items: [
-            { title: 'Departments List', to:'/departments/list' },
-          ],
-          title: 'Departments',
-        },
        
         {
           action: 'mdi-town-hall',
@@ -72,15 +65,12 @@
             { title: 'Schools', to:'/setup/schools'},
             { title: 'Department', to:'/setup/departments'},
             { title: 'Clases', to:'/setup/classes'},
-            { title: 'Levels/Grade', to:'/setup/levels'}
+            { title: 'Levels/Grade', to:'/setup/levels'},
+            { title: 'Subjects', to:'/setup/subjects'}
         ],
           title: 'Setup',
         },
-        {
-          action: 'mdi-book',
-          items: [{ title: 'Subjects', to:'/subjects' }],
-          title: 'Subjects',
-        },
+        
         {
           action: 'mdi-microsoft-windows-classic',
           items: [{ title: 'Grades', to:'/grading' }],
@@ -105,6 +95,15 @@
             { title: 'Student Transport', to:'student-passanger'}
         ],
           title: 'Transportation',
+        },
+        {
+          action: 'mdi-bed',
+          items: [
+            { title: 'Vehicle List', to:'vehicles'},
+            { title: 'Staff Transport', to:'staff-passangers'},
+            { title: 'Student Transport', to:'student-passanger'}
+        ],
+          title: 'Health',
         },
       ],
     }),

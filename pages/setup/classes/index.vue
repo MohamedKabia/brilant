@@ -23,24 +23,45 @@
                         <div>
                             <v-card-title
                             class="text-h5"
-                            v-text="item.name"
+                            v-text="item.title"
                             ></v-card-title>
 
-                            <v-card-subtitle v-text="item.displayName"></v-card-subtitle>
+                            <v-card-subtitle v-text="item.artist"></v-card-subtitle>
 
                             <v-card-actions>
-                            
+                            <v-btn
+                                v-if="item.artist === 'Ellie Goulding'"
+                                class="ml-2 mt-3"
+                                fab
+                                icon
+                                height="40px"
+                                right
+                                width="40px"
+                            >
+                                <v-icon>mdi-play</v-icon>
+                            </v-btn>
 
                             <v-btn
+                                v-else
                                 class="ml-2 mt-5"
                                 outlined
                                 rounded
                                 small
-                                @click="editItem(item)"
+                                icon
                             >
                                 Edit <v-icon class="ml-2" color="info">mdi-pencil</v-icon>
                             </v-btn>
 
+                            <v-btn
+                                v-else
+                                class="ml-2 mt-5"
+                                outlined
+                                rounded
+                                small
+                                icon
+                            >
+                                Remove <v-icon class="ml-2" color="error">mdi-delete</v-icon>
+                            </v-btn>
                             </v-card-actions>
                         </div>
 
@@ -49,14 +70,13 @@
                             size="125"
                             tile
                         >
-                            <v-img v-if="item.badg" :src="baseUrl+'/'+item.badg"></v-img>
-                            <v-img v-else src="/logo.jpeg"></v-img>
+                            <v-img :src="item.src"></v-img>
                         </v-avatar>
                         </div>
                     </v-card>
                 </v-col>
             </v-row>
-            <CreateSchool :editedIndex="editedIndex" :editedItem="editedItem" :defaultItem="defaultItem" :dialog="dialog" @update:option="closeDialog"/>
+            <CreateSchool :dialog="dialog" @update:option="closeDialog"/>
         </v-container>
     </div>
 </template>
@@ -67,39 +87,23 @@ export default {
     data(){
         return{
             dialog:false,
-            editedIndex: -1,
-            editedItem: {
-                name:"",
-                displayName:"",
-                location:"",
-                badg:'/placeholder.jpg',
-            },
-            defaultItem: {
-                name:"",
-                displayName:"",
-                location:"",
-                badg:'/placeholder.jpg',
-            },
+            schools:[
+                {
+                _id:'62',
+                color: '#1F7087',
+                src: 'logo.jpeg',
+                title: 'Supermodel',
+                artist: 'Foster the People',
+                },
+            ]
         }
     },
     computed: {
-        schools(){
-            return this.$store.getters['school/schools']
-        },
-        baseUrl(){
-            return this.$store.getters['management/baseUrl']
-        }
+        
     },
     methods: {
-        editItem (item) {
-            this.editedIndex = this.schools.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
-      },
         closeDialog(){
-            this.dialog=false;
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
+            this.dialog=false
         }
     },
 }
