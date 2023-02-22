@@ -2,11 +2,11 @@
     <div>
         <v-dialog 
             v-model="dialog"
-            min-width="900"
+            width="700"
             persistent
              >
             <v-card>
-                <v-card-text>
+                <v-card-text class="pt-5 pb-5">
                     <v-row>
                         <v-col sm="6" cols="12" md="4">
                             <div class="school-list">
@@ -46,12 +46,11 @@
                         </v-col>
 
                         <v-col sm="6" cols="12" md="4">
+                            <div v-if="errorMessage">{{ errorMessage }}</div>
                             <div v-if="editedItem">
-                                {{ editedItem.name }}
-                                <v-divider></v-divider>
-                                <small>{{ editedItem.displayName }}</small>
+                                {{ editedItem.name }} /<small>{{ editedItem.displayName }}</small>
+                                <v-divider class="mt-2 mb-4"></v-divider>
 
-                                <v-divider></v-divider>
                                 <v-combobox
                                 v-model="selectedDepartment"
                                 :items="departmentOption"
@@ -63,10 +62,21 @@
                             ></v-combobox>
                             </div>
                         </v-col>
+                        <v-col sm="6" cols="12" md="4" v-if="editedItem">
+                            <v-combobox
+                                v-model="role"
+                                :items="roles"
+                                label="User Roles"
+                                dense
+                                outlined  
+                                multiple
+                            ></v-combobox>
+                        </v-col>
                     </v-row>
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn color="secondary" @click="close">Close</v-btn>
+                <v-card-actions class="pb-5">
+                    <v-btn color="primary" @click="close" rounded >Save <v-icon class="ml-2" color="info">mdi-kite</v-icon></v-btn>
+                    <v-btn color="secondary" @click="close" rounded outlined class="ml-3">Close</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -77,6 +87,7 @@ export default {
     props:['dialog'],
     data(){
         return{
+            errorMessage:null,
             editedItem:null,
             highletedItem:null,
             selectedItems:null,
@@ -89,6 +100,8 @@ export default {
                     ]}
                 }
             ],
+            role:'',
+            roles:["Admin","Staff","Burser","Teacher","Principal"],
             selectedSchool:[
             {name:"Aws SSS", _id:"32",icon: 'mdi-clock',departments:[
                     {name:"Literature",_id:"73"},{name:"Computer ITC",_id:"43"}
@@ -103,14 +116,7 @@ export default {
     computed: {
         schools(){
             //get from store
-            return  [
-                {name:"Aws JSS", _id:"12",icon: 'mdi-clock',departments:[
-                    {name:"Mathematics",_id:"23"},{name:"Biology",_id:"33"}
-                ]},
-                {name:"Aws SSS", _id:"32",icon: 'mdi-clock',departments:[
-                    {name:"Literature",_id:"73"},{name:"Computer ITC",_id:"43"}
-                ]},
-            ];
+            return  this.$store.getters['school/schools']
         },
         schoolOptions(){
             let data=[];
@@ -157,12 +163,15 @@ export default {
         updateStaffSchool(){
             this.prepDisplaySchool();
         },
+        //
         selectDepartment(val){
             this.editedItem=val;
             let data=[]
-            this.departmentOption= this.val.departments.forEach(dep=>{
-                data.push({ value:dep._id, text:dep.name},)
-            })
+            if(val.departments){
+                this.departmentOption= val.departments.forEach(dep=>{
+                    data.push({ value:dep._id, text:dep.name},)
+                })
+            }else this.errorMessage="The Selected school has not be given departments"
         },
         close (date) {
           this.$emit('update:option', false);

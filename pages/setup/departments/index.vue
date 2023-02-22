@@ -3,16 +3,14 @@
         <v-container>
             
            <Department/>
-            <CreateSchool :dialog="dialog" @update:option="closeDialog"/>
         </v-container>
     </div>
 </template>
 <script>
-import CreateSchool from '../../../components/SchoolCompinent/create.vue';
 import Department from "../../../components/Departments"
 
 export default {
-    components:{CreateSchool,Department},
+    components:{Department},
     data(){
         return{
             dialog:false,
