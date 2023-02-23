@@ -53,7 +53,7 @@
 
                                 <v-combobox
                                 v-model="selectedDepartment"
-                                :items="departmentOption"
+                                :items="departmentOptions"
                                 label="Assign to Department"
                                 dense
                                 outlined  
@@ -91,7 +91,7 @@ export default {
             editedItem:null,
             highletedItem:null,
             selectedItems:null,
-
+            departmentOptions:[],
             staffDepartment:[
                 {
                     name:"Literature",_id:"73",
@@ -138,11 +138,17 @@ export default {
             }
 
         },*/
-        departmentOptions(){
+        departmentOption(){
            let data=[];
-           let department= this.$store.getters['management/getDepartments'];
-           if(department.length>0){
-             department.forEach(d=>{
+           
+           let school= this.selectedSchool.some(sch=> {
+            console.log(sch,this.selectedSchool)
+                return sch._id == this.selectedSchool.value
+            })
+           let departments= school.departments;
+           console.log(school,"====")
+           if(departments){
+             departments.forEach(d=>{
                 data.push({ value:d._id, text:d.name},)
              })
            }
@@ -156,7 +162,6 @@ export default {
                 let selectedSchools = this.schools.filter(school=> {
                     return this.selectedItems.some(sc=> sc.value== school._id)
                 });
-                console.log(selectedSchools)
                 this.selectedSchool =selectedSchools
             }
         },
@@ -167,10 +172,12 @@ export default {
         selectDepartment(val){
             this.editedItem=val;
             let data=[]
+            console.log(val)
             if(val.departments){
-                this.departmentOption= val.departments.forEach(dep=>{
+               val.departments.forEach(dep=>{
                     data.push({ value:dep._id, text:dep.name},)
                 })
+                this.departmentOptions=data
             }else this.errorMessage="The Selected school has not be given departments"
         },
         close (date) {

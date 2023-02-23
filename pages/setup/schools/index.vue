@@ -37,11 +37,11 @@
                                 >
                                     Edit <v-icon class="ml-2" color="info">mdi-pencil</v-icon>
                                 </v-btn>
-                                <v-btn small rounded outlined color="primary" @click="staffDialog=!staffDialog">
+                                <v-btn small rounded outlined color="primary" @click="selectStaff(item)">
                                     Staff <v-icon class="ml-2" color="green">mdi-account-plus</v-icon>
                                 </v-btn>
                                 
-                                <v-btn small rounded outlined color="secondary" @click="depDiolog=!depDiolog">
+                                <v-btn small rounded outlined color="secondary" @click="selectDep(item)">
                                     Dep <v-icon class="ml-2" color="green">mdi-house-plus</v-icon>
                                 </v-btn>
                             </v-card-actions>
@@ -106,21 +106,51 @@ export default {
             this.editedItem = Object.assign({}, item)
             this.dialog = true
       },
-        closeStaffSelect(){
+      selectStaff (item) {
+            this.editedIndex = this.schools.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.staffDialog = true
+      },
+      selectDep (item) {
+            this.editedIndex = this.schools.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.depDiolog = true
+      },
+      closeDialog(){
             this.dialog=false;
-            this.staffDialog=false
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.editedIndex = -1
+        },
+        updateSchool(item){
+            let updata ={
+                _id:this.editedItem._id,
+                ...item
+            };
+            this.$store.dispatch('school/update',updata);
+
             this.editedItem = Object.assign({}, this.defaultItem)
             this.editedIndex = -1
         },
         closeStaffSelect(val){
             this.staffDialog=val.dialog
-            this.selectedStaff=val.data;
-            console.log(this.selectedStaff);
+            let depArr=[]
+            if(val.data){
+                val.data.forEach(staff => {
+                    depArr.push({_id:staff.value},)
+                });
+            };
+            this.updateSchool({departments:depArr})
+            
         },
         closeDepSelect(val){
             this.depDiolog=val.dialog
-            this.selectedStaff=val.data;
-            console.log(this.selectedStaff);
+            let staffArr=[]
+            if(val.data){
+                val.data.forEach(dep => {
+                    staffArr.push({_id:dep.value},)
+                });
+            }else console.log("nothing selected")
+            this.updateSchool({staffs:staffArr})
         }
     },
 }
