@@ -6,14 +6,14 @@
       class="elevation-1"
     >
       <template v-slot:item.hods="{item}">
-          <div class="primary--text">
+          <div class="primary--text" v-if="item.hods[0]">
             <nuxt-link :to='"/staff/"+item._id'>
               <v-avatar
                 size="36px"
               >
                 <img
                   alt="Avatar"
-                  src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                  :src="baseUrl+'/'+item.hods[0].pp"
                 >
                 
             </v-avatar>
@@ -141,6 +141,9 @@
   
      
       computed: {
+        baseUrl(){
+          return this.$store.getters['management/baseUrl']
+        }, 
         formTitle () {
           return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
