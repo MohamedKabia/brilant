@@ -37,14 +37,22 @@ export const  mutations= {
         },
         updateDepartment({commit},payload){
             this.$axios
-            .$post(`${baseUrl}/api/department/update/${payload._id}`, payload)
+            .$post(`${baseUrl}/api/department/update/${payload._id}`, payload.data)
             .then((res) => {
                 commit("updateItem",{data:payload, itemNmae:"departments"});
             }).catch(err=>{
                 console.log(err)
             })
         },
-        
+        deleteDepartment({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/department/delete/${payload._id}`)
+            .then((res) => {
+                commit("pushTodepartment",res.data);
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
         addStaff({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
             this.$axios

@@ -15,7 +15,7 @@
                             <v-col cols="12" md="6">
                                     <v-text-field
                                         class="text-uppercase"
-                                        v-model="name"
+                                        v-model="editedItem.name"
                                         :rules="required"
                                         label="Name"
                                         outlined
@@ -31,9 +31,7 @@
                                     :items="staffOptions"
                                     label="HOD"
                                     dense
-                                    outlined 
-                                    :rules="required" 
-                                    
+                                    outlined                                     
                                     ></v-combobox>
                                 </v-col>
                                 <v-col cols="12" md="6">
@@ -59,7 +57,7 @@
                                 </v-col>
                         </v-row>
                         <v-card-actions>
-                            <v-btn color="primary" @click="save">Save <v-icon>mdi-kite</v-icon></v-btn> 
+                            <v-btn color="primary" @click="save">Update <v-icon>mdi-kite</v-icon></v-btn> 
                             <v-btn outlined color="secondary" @click="close" class="ml-5">Close</v-btn>
                         </v-card-actions>
                    </v-form>
@@ -70,26 +68,22 @@
 </template>
 <script>
 export default {
-    props:['dialog'],
+    props:['dialog','editedItem'],
     data(){
         return{
             errMessage:null,
             subjects:[],
-            name:"",
             teachers:[],
             hods:null,
             required: [
             v => !!v || 'This field is required',
             ],
-
-            //end create form data
             selectedItems:null,
            
         }
     },
-    
+   
     computed: {
-       
         staffOptions(){
             let staff= this.$store.getters['management/getStaff']
             let data=[];
@@ -119,14 +113,12 @@ export default {
     },
     methods: {
         validateName(){
-            console.log("hdhdhd---")
             if(this.departments){
                 let nameTaken =this.departments.some(dep=> dep.name == this.name);
                 if(nameTaken) {this.errMessage="This department already exist"}
-                
                 else {this.errMessage=null}
             }else{
-                this.errMessage ="err"
+                this.errMessage =null
             }
         },
        save(){
@@ -152,16 +144,34 @@ export default {
         }
 
         let data={
-            name:this.name,
+            name:this.editedItem.name,
             hods,teachers,subjects
         };
-        this.$store.dispatch('management/addDepartment',data)
+        this.$store.dispatch('management/updateDepartment',{data,_id:this.editedItem._id})
         this.close()
        },
 
        close () {
+        this.subjects=[],
+        this.teachers=[];
+        this.hods=null;
           this.$emit('update:option', false);
         },
+    },
+    watch: {
+        dialog(val){
+            console.log(val)
+            if(val && this.editedItem){
+                this.editedItem.teachers.forEach(st=>{
+                    if(st){
+                        this.teachers.push({value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
+                    }
+                });
+                if(this.editedItem.hods[0]){
+                    this.hods={value:this.editedItem.hods[0]._id, text:this.editedItem.hods[0].staffId+' '+this.editedItem.hods[0].firstName+' '+this.editedItem.hods[0].lastName}
+                }
+            }
+        }
     },
 }
 </script>

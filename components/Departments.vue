@@ -21,6 +21,16 @@
             </nuxt-link>
           </div>
         </template>
+        <template v-slot:item.teachers="{item}">
+          <div class="primary--text" >
+            {{ item.teachers.length }}
+          </div>
+        </template>
+         <template v-slot:item.subjects="{item}">
+          <div class="primary--text" >
+            {{ item.subjects.length }}
+          </div>
+        </template>
       <template v-slot:top>
         <v-toolbar
           flat
@@ -43,12 +53,13 @@
                 Add New Department
               </v-btn>
               <CreateDepartment :dialog="createDialog" @update:option="closeDialog"/>
+               <EditDepartment :editedItem="editedItem" :dialog="editDialog" @update:option="closeDialog"/>
               </div>
            
          
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+              <v-card-title class="text-h6 warning--text">Are you sure you want to delete this department? This may cause error if it has bben linked to staff, schools or students</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -60,26 +71,18 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        
-        <nuxt-link :to='"/departments/"+item.id'>
-          <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-          >
-            mdi-eye
-          </v-icon>
-        </nuxt-link>
         <v-icon
           small
           class="mr-2"
           @click="editItem(item)"
+          color="info"
         >
           mdi-pencil
         </v-icon>
         <v-icon
           small
           @click="deleteItem(item)"
+          color="error"
         >
           mdi-delete
         </v-icon>
@@ -88,20 +91,17 @@
     </v-data-table>
   </template>
   <script>
-  import CreateDepartment from './DepartmentComponents/create.vue'
+  import CreateDepartment from './DepartmentComponents/create.vue';
+  import EditDepartment from './DepartmentComponents/edit.vue'
     export default {
-      components:{CreateDepartment},
+      components:{CreateDepartment,EditDepartment},
       data: () => ({
+        editDialog:false,
         createDialog:false,
         dialog: false,
         dialogDelete: false,
         headers: [
-          {
-            text: 'ID',
-            align: 'start',
-            sortable: true,
-            value: '_id',
-          },
+          
           {
             text: 'Name',
             align: 'start',
@@ -111,12 +111,20 @@
           
           
           { text: 'HOD', value: 'hods' },
+          {
+            text: 'No Subjects',
+            value: 'subjects',
+          },
+          {
+            text: 'No Teachers',
+            value: 'teachers',
+          },
           { text: 'Actions', value: 'actions' },
         ],
         editedIndex: -1,
         editedItem: {
           name: '',
-          hods: [],
+          hods: [], 
           teachers: [],
           description:'',
           subjects:[]
@@ -173,38 +181,18 @@
            return data
         }
       },
+      
       methods: {
         closeDialog(){
+          this.editDialog=false;
           this.createDialog=false;
         },
+        
         editItem (item) {
           this.editedIndex = this.departments.indexOf(item);
-          this.editedItem = Object.assign({}, item)
-          let ho=[]
-          let su=[]
-          let te=[]
-          if(this.editedItem.hods.length >0){
-              let hod=this.editedItem.hods
-              //h.push(hod._id)
-              ho.push(hod[0]._id)
-          }
-          this.editedItem.hods=ho;
-
-          if(this.editedItem.subjects.length >0){
-            this.editedItem.subjects.forEach(sub=>{
-              su.push({text:sub.name, value:sub._id})
-            })
-          }
-          this.editedItem.subjects=su;
-
-          if(this.editedItem.teachers.length >0){
-            this.editedItem.teachers.forEach(teacher=>{
-              te.push({text:teacher.staffId +'/'+ teacher.firstName,  value:teacher._id})
-            })
-          }
-          this.editedItem.teachers=te;
-          
-          this.dialog = true
+          this.editedItem = Object.assign({}, item);
+          console.log(this.editedItem,"item ediy")
+          this.editDialog = true
         },
   
         deleteItem (item) {
@@ -214,6 +202,7 @@
         },
   
         deleteItemConfirm () {
+          this.$store.dispatch('management/deleteDepartment',this.editedItem)
           this.departments.splice(this.editedIndex, 1)
           this.closeDelete()
         },
@@ -233,34 +222,8 @@
             this.editedIndex =-1
           })
         },
-        prepData(){
-          let subject=[];
-          let teacher=[];
-          if(this.editedItem.subjects.length>0){
-            this.editedItem.subjects.forEach(sub=>{
-              subject.push({_id:sub.value})
-            })
-            this.editedItem.subjects=subject
-           }
-           if(this.editedItem.teachers.length>0){
-            this.editedItem.teachers.forEach(te=>{
-              teacher.push({_id:te.value})
-            })
-            this.editedItem.teachers=teacher
-           }
-        },
-        save () {
-          this.prepData();
-          if (this.editedIndex > -1) {
-            this.editedItem.hods=[{_id: this.editedItem.hods.value}]
-            this.$store.dispatch('management/updateDepartment',this.editedItem)
-          } else {
-            this.editedItem.hods={_id: this.editedItem.hods.value}
-            this.$store.dispatch('management/addDepartment',this.editedItem)
-          }
-          this.close()
-          
-        },
+        
+        
       },
     }
   </script>
