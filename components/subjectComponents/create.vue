@@ -15,7 +15,7 @@
                             <v-col cols="12" md="6">
                                     <v-text-field
                                         class="text-uppercase"
-                                        v-model="editedItem.name"
+                                        v-model="name"
                                         :rules="required"
                                         label="Name"
                                         outlined
@@ -25,15 +25,7 @@
                                     ></v-text-field>
                                 </v-col>
                                 
-                                <v-col cols="12" md="6">
-                                    <v-combobox
-                                    v-model="hods"
-                                    :items="staffOptions"
-                                    label="HOD"
-                                    dense
-                                    outlined                                     
-                                    ></v-combobox>
-                                </v-col>
+                                
                                 <v-col cols="12" md="6">
                                     <v-combobox
                                     v-model="teachers"
@@ -45,19 +37,17 @@
                                     ></v-combobox>
                                 </v-col>
                                 <v-col cols="12" md="6">
-                                    <v-combobox
-                                    v-model="subjects"
-                                    :items="subjectOptions"
-                                    label="Subject"
+                                    <v-date
+                                    v-model="startedDate"
+                                    label="Date Started"
                                     dense
                                     outlined 
                                     multiple 
-                                    :rules="required"
-                                    ></v-combobox>
+                                    ></v-date>
                                 </v-col>
                         </v-row>
                         <v-card-actions>
-                            <v-btn color="primary" @click="save">Update <v-icon>mdi-kite</v-icon></v-btn> 
+                            <v-btn color="primary" @click="save">Save <v-icon>mdi-kite</v-icon></v-btn> 
                             <v-btn outlined color="secondary" @click="close" class="ml-5">Close</v-btn>
                         </v-card-actions>
                    </v-form>
@@ -68,22 +58,27 @@
 </template>
 <script>
 export default {
-    props:['dialog','editedItem'],
+    props:['dialog'],
     data(){
         return{
+            startedDate:null,
             errMessage:null,
             subjects:[],
+            name:"",
             teachers:[],
             hods:null,
             required: [
             v => !!v || 'This field is required',
             ],
+
+            //end create form data
             selectedItems:null,
            
         }
     },
-   
+    
     computed: {
+       
         staffOptions(){
             let staff= this.$store.getters['management/getStaff']
             let data=[];
@@ -94,28 +89,13 @@ export default {
            }
           return data;
         },
-
-       
-        departments(){
-           return this.$store.getters['management/getDepartments'];
-        },
-        subjectOptions(){
-           let data=[];
-           let subjects= this.$store.getters['management/getSubjects'];
-           if(subjects.length>0){
-             subjects.forEach(d=>{
-                data.push({ value:d._id, text:d.name},)
-             })
-           }
-          return data;
-        },
-
     },
     methods: {
         validateName(){
             if(this.departments){
                 let nameTaken =this.departments.some(dep=> dep.name == this.name);
                 if(nameTaken) {this.errMessage="This department already exist"}
+                
                 else {this.errMessage=null}
             }else{
                 this.errMessage =null
@@ -130,49 +110,24 @@ export default {
             return objectId
         }
 
-        let hods;
         let teachers;
-        let subjects;
         if(this.teachers){
             teachers =refObject(this.teachers)
         }
-        if(this.subjects){
-            subjects =refObject(this.subjects)
-        }
-        if(this.hods){
-            hods ={_id:this.hods.value}
-        }
+        
 
         let data={
-            name:this.editedItem.name,
-            hods,teachers,subjects
+            name:this.name,
+            startedDate:this.startedDate,
+            teachers,
         };
-        this.$store.dispatch('management/updateDepartment',{data,_id:this.editedItem._id})
+        this.$store.dispatch('management/addSubject',data)
         this.close()
        },
 
        close () {
-        this.subjects=[],
-        this.teachers=[];
-        this.teachers=[];
-        this.hods=null;
           this.$emit('update:option', false);
         },
-    },
-    watch: {
-        dialog(val){
-            console.log(val)
-            if(val && this.editedItem){
-                this.editedItem.teachers.forEach(st=>{
-                    if(st){
-                        this.teachers.push({value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
-                    }
-                });
-                if(this.editedItem.hods[0]){
-                    this.hods={value:this.editedItem.hods[0]._id, text:this.editedItem.hods[0].staffId+' '+this.editedItem.hods[0].firstName+' '+this.editedItem.hods[0].lastName}
-                }
-            }
-        }
     },
 }
 </script>

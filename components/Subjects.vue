@@ -5,117 +5,56 @@
     sort-by="name"
     class="elevation-1"
   >
-    
+    <template v-slot:item.hods="{item}">
+        <div class="primary--text" v-if="item.hods[0]">
+          <nuxt-link :to='"/staff/"+item._id'>
+            <v-avatar
+              size="36px"
+            >
+              <img
+                alt="Avatar"
+                :src="baseUrl+'/'+item.hods[0].pp"
+              >
+              
+          </v-avatar>
+          <span v-if="item.hods[0]">{{item.hods[0].firstName +" "+ item.hods[0].lastName}}</span>
+          </nuxt-link>
+        </div>
+      </template>
+      <template v-slot:item.teachers="{item}">
+        <div class="primary--text" >
+          {{ item.teachers.length }}
+        </div>
+      </template>
     <template v-slot:top>
       <v-toolbar
         flat
        >
-        <v-toolbar-title>Departments</v-toolbar-title>
+        <v-toolbar-title>Subject</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-          max-width="500px"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
+        
+            <div>
+              <v-btn
               color="primary"
               dark
               class="mb-2"
-              v-bind="attrs"
-              v-on="on"
+              @click="createDialog = !createDialog"
             >
               Add New Subject
             </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Subject name"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.startedDate"
-                      label="Date"
-                      dense
-                      outlined  
-                      ></v-text-field>
-                  </v-col>
-
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-combobox
-                      v-model="editedItem.teachers"
-                      :items="teachers"
-                      label="Teachers"
-                      dense
-                      outlined  
-                      multiple
-                      ></v-combobox>
-                  </v-col>
-
-                
-                  <v-col
-                    cols="12"
-                  >
-                    <v-textarea
-                      v-model="editedItem.description"
-                      label="Description"
-                    ></v-textarea>
-                  </v-col>
-                </v-row>
-               
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="secondary darken-1"
-                text
-                @click="close"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="save"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+            <CreateSubject :dialog="createDialog" @update:option="closeDialog"/>
+             <EditSubject :editedItem="editedItem" :dialog="editDialog" @update:option="closeDialog"/>
+            </div>
+         
+       
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="text-h6 warning--text">Are you sure you want to delete this subject? This may cause error if it has bben linked to staff, schools or students</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -127,26 +66,18 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      
-      <nuxt-link :to='"/subjects/"+item.id'>
-        <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-        >
-          mdi-eye
-        </v-icon>
-      </nuxt-link>
       <v-icon
         small
         class="mr-2"
         @click="editItem(item)"
+        color="info"
       >
         mdi-pencil
       </v-icon>
       <v-icon
         small
         @click="deleteItem(item)"
+        color="error"
       >
         mdi-delete
       </v-icon>
@@ -155,17 +86,17 @@
   </v-data-table>
 </template>
 <script>
+import CreateSubject from './subjectComponents/create.vue';
+import EditSubject from './subjectComponents/edit.vue'
   export default {
+    components:{CreateSubject,EditSubject},
     data: () => ({
+      editDialog:false,
+      createDialog:false,
       dialog: false,
       dialogDelete: false,
       headers: [
-        {
-          text: 'ID',
-          align: 'start',
-          sortable: true,
-          value: '_id',
-        },
+        
         {
           text: 'Name',
           align: 'start',
@@ -173,20 +104,30 @@
           value: 'name',
         },
         
-        
-        { text: 'Started Date', value: 'startedDate' },
+        {
+          text: 'NO of Teachers',
+          value: 'teachers',
+        },
+        {
+          text: 'Date Started',
+          value: 'startedDate',
+        },
         { text: 'Actions', value: 'actions' },
       ],
       editedIndex: -1,
       editedItem: {
         name: '',
+        teachers: [], 
         teachers: [],
         description:'',
+        startedDate:[]
       },
       defaultItem: {
         name: '',
+        hods: [],
         teachers: [],
-        description:'Basic Description',
+        description:'',
+        startedDate:[]
       },
     }),
 
@@ -201,40 +142,25 @@
 
    
     computed: {
-      formTitle () {
-        if( this.editedIndex === -1){
-          this.editedItem.description='Basic Description';
-        }
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-      },
+      baseUrl(){
+        return this.$store.getters['management/baseUrl']
+      }, 
       subjects(){
         return this.$store.getters['management/getSubjects']
       },
-      teachers(){
-        let teachers =this.$store.getters['management/getTeachers']
-        let data=[]
-         teachers.forEach(teacher=>{
-           data.push({ value: teacher._id, text:teacher.staffId + '/'+ teacher.firstName +" " +teacher.lastName},)
-         })
-        
-         return data
-      },
-     
     },
+    
     methods: {
- 
+      closeDialog(){
+        this.editDialog=false;
+        this.createDialog=false;
+      },
+      
       editItem (item) {
         this.editedIndex = this.subjects.indexOf(item);
         this.editedItem = Object.assign({}, item);
-        let te=[]
-    
-        if(this.editedItem.teachers.length >0){
-          this.editedItem.teachers.forEach(teacher=>{
-            te.push({text:teacher.staffId +'/'+ teacher.firstName,  value:teacher._id})
-          })
-        }
-        this.editedItem.teachers=te;
-        this.dialog = true
+        console.log(this.editedItem,"item ediy")
+        this.editDialog = true
       },
 
       deleteItem (item) {
@@ -244,7 +170,8 @@
       },
 
       deleteItemConfirm () {
-        this.subjects.splice(this.editedIndex, 1)
+        this.$store.dispatch('management/deleteSubject',this.editedItem)
+        //this.subjects.splice(this.editedIndex, 1)
         this.closeDelete()
       },
 
@@ -263,26 +190,8 @@
           this.editedIndex =-1
         })
       },
-      prepData(){
-        let teacher=[];
-       
-         if(this.editedItem.teachers.length>0){
-          this.editedItem.teachers.forEach(te=>{
-            teacher.push({_id:te.value})
-          })
-          this.editedItem.teachers=teacher
-         }
-      },
-      save () {
-        this.prepData();
-        if (this.editedIndex > -1) {
-          this.$store.dispatch('management/updateSubject',this.editedItem)
-        } else {
-          this.$store.dispatch('management/addSubject',this.editedItem)
-        }
-        this.close()
-        
-      },
+      
+      
     },
   }
 </script>

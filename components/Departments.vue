@@ -112,11 +112,11 @@
           
           { text: 'HOD', value: 'hods' },
           {
-            text: 'No Subjects',
+            text: 'NO of Subjects',
             value: 'subjects',
           },
           {
-            text: 'No Teachers',
+            text: 'NO of Teachers',
             value: 'teachers',
           },
           { text: 'Actions', value: 'actions' },
@@ -203,7 +203,7 @@
   
         deleteItemConfirm () {
           this.$store.dispatch('management/deleteDepartment',this.editedItem)
-          this.departments.splice(this.editedIndex, 1)
+          //this.departments.splice(this.editedIndex, 1)
           this.closeDelete()
         },
   

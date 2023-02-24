@@ -25,15 +25,7 @@
                                     ></v-text-field>
                                 </v-col>
                                 
-                                <v-col cols="12" md="6">
-                                    <v-combobox
-                                    v-model="hods"
-                                    :items="staffOptions"
-                                    label="HOD"
-                                    dense
-                                    outlined                                     
-                                    ></v-combobox>
-                                </v-col>
+                               
                                 <v-col cols="12" md="6">
                                     <v-combobox
                                     v-model="teachers"
@@ -44,17 +36,7 @@
                                     multiple 
                                     ></v-combobox>
                                 </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-combobox
-                                    v-model="subjects"
-                                    :items="subjectOptions"
-                                    label="Subject"
-                                    dense
-                                    outlined 
-                                    multiple 
-                                    :rules="required"
-                                    ></v-combobox>
-                                </v-col>
+                                
                         </v-row>
                         <v-card-actions>
                             <v-btn color="primary" @click="save">Update <v-icon>mdi-kite</v-icon></v-btn> 
@@ -72,9 +54,7 @@ export default {
     data(){
         return{
             errMessage:null,
-            subjects:[],
             teachers:[],
-            hods:null,
             required: [
             v => !!v || 'This field is required',
             ],
@@ -93,28 +73,13 @@ export default {
              })
            }
           return data;
-        },
-
-       
-        departments(){
-           return this.$store.getters['management/getDepartments'];
-        },
-        subjectOptions(){
-           let data=[];
-           let subjects= this.$store.getters['management/getSubjects'];
-           if(subjects.length>0){
-             subjects.forEach(d=>{
-                data.push({ value:d._id, text:d.name},)
-             })
-           }
-          return data;
-        },
+        },       
 
     },
     methods: {
         validateName(){
             if(this.departments){
-                let nameTaken =this.departments.some(dep=> dep.name == this.name);
+                let nameTaken =this.departments.some(dep=> dep.name == this.editedItem.name);
                 if(nameTaken) {this.errMessage="This department already exist"}
                 else {this.errMessage=null}
             }else{
@@ -130,47 +95,33 @@ export default {
             return objectId
         }
 
-        let hods;
         let teachers;
-        let subjects;
         if(this.teachers){
             teachers =refObject(this.teachers)
         }
-        if(this.subjects){
-            subjects =refObject(this.subjects)
-        }
-        if(this.hods){
-            hods ={_id:this.hods.value}
-        }
+       
 
         let data={
             name:this.editedItem.name,
-            hods,teachers,subjects
+            teachers,
         };
-        this.$store.dispatch('management/updateDepartment',{data,_id:this.editedItem._id})
+        this.$store.dispatch('management/updateSubject',{data,_id:this.editedItem._id})
         this.close()
        },
 
        close () {
-        this.subjects=[],
         this.teachers=[];
-        this.teachers=[];
-        this.hods=null;
           this.$emit('update:option', false);
         },
     },
     watch: {
         dialog(val){
-            console.log(val)
             if(val && this.editedItem){
                 this.editedItem.teachers.forEach(st=>{
                     if(st){
                         this.teachers.push({value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
                     }
                 });
-                if(this.editedItem.hods[0]){
-                    this.hods={value:this.editedItem.hods[0]._id, text:this.editedItem.hods[0].staffId+' '+this.editedItem.hods[0].firstName+' '+this.editedItem.hods[0].lastName}
-                }
             }
         }
     },

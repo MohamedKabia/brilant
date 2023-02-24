@@ -48,7 +48,7 @@ export const  mutations= {
             this.$axios
             .$post(`${baseUrl}/api/department/delete/${payload._id}`)
             .then((res) => {
-                commit("pushTodepartment",res.data);
+                //commit("pushTodepartment",res.data);
             }).catch(err=>{
                 console.log(err)
             })
@@ -94,10 +94,19 @@ export const  mutations= {
         },
         updateSubject({commit},payload){
             this.$axios
-            .$post(`${baseUrl}/api/subject/update/${payload._id}`, payload)
+            .$post(`${baseUrl}/api/subject/update/${payload._id}`, payload.data)
             .then((response) => {
                 //commit("pushData", {itemsName:"subjects",data:response});
               
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        deleteSubject({commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/subject/delete/${payload._id}`)
+            .then((res) => {
+                //commit("pushTodepartment",res.data);
             }).catch(err=>{
                 console.log(err)
             })
