@@ -3,9 +3,17 @@ import { baseUrl } from "./base";
 export const state = () => ({
         levels:[],
         programs:[],
+        loading:{
+            loading:false,
+            message:""
+        },
+        redirect:false,
      });
  
 export const mutations= { 
+        setLoading(state, payload){
+            state.loading=payload;
+        },
         pushToLevels(state, payload){
            state.levels.push(payload)
         },
@@ -95,21 +103,29 @@ export const actions= {
             });
         },
 
-    getPrograms({commit }, payload) {
-    let token = payload;
-    this.$axios
-        .$get(`${baseUrl}/api/programs/getprograms`, {
-        headers: {
-            authtoken: token,
+        getPrograms({commit }, payload) {
+        let token = payload;
+        this.$axios
+            .$get(`${baseUrl}/api/programs/getprograms`, {
+            headers: {
+                authtoken: token,
+            },
+            })
+            .then((response) => {
+            commit("setPrograms", response);
+            })
+            .catch((err) => {
+            console.log("programs error", err)
+            });
         },
-        })
-        .then((response) => {
-        commit("setPrograms", response);
-        })
-        .catch((err) => {
-        console.log("programs error", err)
-        });
-    },
+
+        setLoading({commit},payload){
+            console.log("loading=====");
+            commit("setLoading",payload)
+         },
+         setRedirect({commit},payload){
+             commit("setRedirect",payload)
+         }
     };
 export const  getters= { 
     getPrograms(state){
@@ -118,17 +134,11 @@ export const  getters= {
     getlevels(state){
         return state.levels;
     },  
-    isStudent(state){
-        return state.isStudent
+    loading(state){
+        return state.loading;
     },
-    isStaff(state){
-        return state.isStaff
-    },
-    isParent(state){
-        return state.isParent
-    },
-    isAdmin(state){
-        return state.isAdmin
-    },
+    getRedirect(state){
+        return state.redirect
+    }
 }
   

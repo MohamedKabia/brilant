@@ -26,7 +26,7 @@ export const  mutations= {
         }
      };
      export const    actions= {  
-        addDepartment({commit},payload){
+        addDepartment({dispatch,commit},payload){
             this.$axios
             .$post(`${baseUrl}/api/department/create`, payload)
             .then((res) => {
@@ -35,7 +35,7 @@ export const  mutations= {
                 console.log(err)
             })
         },
-        updateDepartment({commit},payload){
+        updateDepartment({dispatch,commit},payload){
             this.$axios
             .$post(`${baseUrl}/api/department/update/${payload._id}`, payload.data)
             .then((res) => {
@@ -44,13 +44,15 @@ export const  mutations= {
                 console.log(err)
             })
         },
-        deleteDepartment({commit},payload){
+        deleteDepartment({dispatch,commit},payload){
             this.$axios
             .$post(`${baseUrl}/api/department/delete/${payload._id}`)
             .then((res) => {
                 //commit("pushTodepartment",res.data);
             }).catch(err=>{
                 console.log(err)
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
             })
         },
         addStaff({dispatch,commit},payload){
@@ -70,11 +72,15 @@ export const  mutations= {
 
         },
 
-        addStudent({commit},payload){
+        addStudent({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Adding Student'},{root:true});
             this.$axios
             .$post(`${baseUrl}/api/student/create`, payload)
             .then((response) => {
+
                 commit("pushData", {itemsName:"students",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
               
             }).catch(err=>{
                 console.log(err)
@@ -82,27 +88,30 @@ export const  mutations= {
         },
 
         //subjects
-        addSubject({commit},payload){
+        addSubject({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'adding Subject'},{root:true});
             this.$axios
             .$post(`${baseUrl}/api/subject/create`, payload)
             .then((response) => {
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 commit("pushData", {itemsName:"subjects",data:response});
               
             }).catch(err=>{
                 console.log(err)
             })
         },
-        updateSubject({commit},payload){
+        updateSubject({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Updating'},{root:true});
             this.$axios
             .$post(`${baseUrl}/api/subject/update/${payload._id}`, payload.data)
             .then((response) => {
-                //commit("pushData", {itemsName:"subjects",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               
             }).catch(err=>{
                 console.log(err)
             })
         },
-        deleteSubject({commit},payload){
+        deleteSubject({dispatch,commit},payload){
             this.$axios
             .$post(`${baseUrl}/api/subject/delete/${payload._id}`)
             .then((res) => {
@@ -114,7 +123,8 @@ export const  mutations= {
 
        
 
-        getStaff({commit }, payload) {
+        getStaff({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
              .$get(`${baseUrl}/api/staff/getStaff`, {
@@ -124,10 +134,12 @@ export const  mutations= {
               })
               .then((response) => {
                 commit("setData", {itemsName:"staff",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
            //get single staff by id
-        getStaffById({commit }, payload) {
+        getStaffById({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
                .$get(`${baseUrl}/api/staff/get/${payload}`, {
@@ -137,10 +149,12 @@ export const  mutations= {
                 })
                 .then((response) => {
                 commit("setData", {itemsName:"st",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 })
         },
         //get department 
-        getdepartments({commit }, payload) {
+        getdepartments({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
              .$get(`${baseUrl}/api/department/getDepartments`, {
@@ -150,11 +164,13 @@ export const  mutations= {
               })
               .then((response) => {
                 commit("setData", {itemsName:"departments",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
 
           //subjects
-          getSubjects({commit }, payload) {
+          getSubjects({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
              .$get(`${baseUrl}/api/subject/getSubjects`, {
@@ -164,11 +180,13 @@ export const  mutations= {
               })
               .then((response) => {
                 commit("setData", {itemsName:"subjects",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
 
           //get students 
-        getStudents({commit }, payload) {
+        getStudents({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
              .$get(`${baseUrl}/api/student/getStudents`, {
@@ -177,21 +195,23 @@ export const  mutations= {
                 },
               })
               .then((response) => {
-                console.log(response)
                 commit("setData", {itemsName:"students",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
         //get single student
-        getStudent({commit }, payload) {
-        let token = payload;
-        this.$axios
-            .$get(`${baseUrl}/api/student/get/${payload}`, {
-            headers: {
-                authtoken: token,
-            },
+        getStudent({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
+            let token = payload;
+            this.$axios
+                .$get(`${baseUrl}/api/student/get/${payload}`, {
+                headers: {
+                    authtoken: token,
+                },
             })
             .then((response) => {
-            commit("setData", {itemsName:"student",data:response});
+                commit("setData", {itemsName:"student",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
             })
         },
     };

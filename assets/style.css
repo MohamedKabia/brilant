@@ -151,3 +151,9 @@
     border: 1px solid var(--primary);
     border-radius: 4px;
  }
+ .loading{
+    overflow:hidden;
+    min-height: 240px;
+    background-color: transparent;
+    box-shadow: none;
+ }

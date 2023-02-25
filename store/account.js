@@ -96,7 +96,7 @@ export const   actions= {
     getData({ dispatch, commit,state,rootState }, payload) {
         let token = state.authToken
         let school = rootState.school.school
-
+        dispatch('settings/setLoading',{loading:true,message:'Fetching Data'},{root:true});
         //general daters
         dispatch('settings/getlevels',token,{root:true});
         dispatch('settings/getPrograms',token,{root:true});

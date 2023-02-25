@@ -38,6 +38,7 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" light/>
     </v-app-bar>
+    <LoaderVue/>
     </div>
 </template>
 
@@ -46,9 +47,10 @@
   import AdminNavList from './default/AdminNavList.vue';
   import StudentNavList from './default/StudentNavList.vue';
   import staffNavListVue from './default/staffNavList.vue';
+  import LoaderVue from './default/Loader.vue';
     export default {
       name: 'DefaultLayout',
-      components:{userAvatarVue,AdminNavList,StudentNavList,staffNavListVue},
+      components:{userAvatarVue,AdminNavList,StudentNavList,staffNavListVue,LoaderVue},
       data () {
         return {
           clipped: false,

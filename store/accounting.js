@@ -34,20 +34,26 @@ export const  mutations= {
      };
      export const    actions= {  
        
-        acceptPayment({commit},payload){
+        acceptPayment({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:true,message:'Processing'},{root:true});
             let id=payload._id
             this.$axios
             .$post(`${baseUrl}/api/billing/payment/${id}`, payload.data)
             .then((response) => {
                 commit("pushData", {itemsName:"staff",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
             });
         },
-        updatePayment({commit},payload){
+        updatePayment({dispatch,commit},payload){
+            dispatch('settings/setLoading',{loading:false,message:'Processing......'},{root:true});
             let id=payload._id
             this.$axios
             .$post(`${baseUrl}/api/billing/update/${id}`, payload.data)
             .then((response) => {
                 //commit("pushData", {itemsName:"staff",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                dispatch('settings/setRedirect',true,{root:true});
             });
         },
         deletePayment({dispatch,commit},payload){
@@ -59,7 +65,8 @@ export const  mutations= {
             });
         },
 
-        getFees({commit}, payload) {
+        getFees({dispatch,commit}, payload) {
+            dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
             let token = payload;
             this.$axios
              .$get(`${baseUrl}/api/billing/getStudentsBill`, {
@@ -70,10 +77,11 @@ export const  mutations= {
               .then((response) => {
                 commit("setData", {itemsName:"fees",data:response});
                 commit('feesTypes', response)
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
 
-        getStudentBills({commit }, id) {
+        getStudentBills({dispatch,commit }, id) {
             let token = "payload";
             this.$axios
                .$get(`${baseUrl}api/billing/get/student/${id}`, {

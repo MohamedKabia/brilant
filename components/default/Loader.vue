@@ -1,44 +1,30 @@
 <template>
-    <div class="text-center">
-      <v-btn
-        :disabled="dialog"
-        :loading="dialog"
-        class="white--text"
-        color="purple darken-2"
-        @click="dialog = true"
-      >
-        Start loading
-      </v-btn>
+    <div v-if="loading">
       <v-dialog
-        v-model="dialog"
-        hide-overlay
+        v-model="loading.loading"
         persistent
-        width="300"
+        width="700"
+        overflow
       >
-        <v-card
-          color="primary"
-          dark
-        >
-          <v-card-text>
-            Please stand by
-            <v-progress-linear
-              indeterminate
-              color="white"
-              class="mb-0"
-            ></v-progress-linear>
-          </v-card-text>
-        </v-card>
+      <div class="text-center pa-5 loading">
+          <v-progress-circular
+          :size="170"
+          :width="7"
+          color="success"
+          indeterminate
+        ></v-progress-circular>
+      </div>  
       </v-dialog>
     </div>
   </template>
   <script>
   export default {
-    data () {
-      return {
-        dialog: false,
+    
+    computed: {
+      loading(){
+        return this.$store.getters['settings/loading']
       }
     },
-
     watch: {
       dialog (val) {
         if (!val) return
@@ -48,3 +34,8 @@
     },
   }
 </script>
+<style scoped>
+.v-progress-circular {
+  margin: 1rem;
+}
+</style>
