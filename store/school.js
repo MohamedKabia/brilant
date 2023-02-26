@@ -44,14 +44,14 @@ export const  mutations= {
                     this.$axios
                     .$post(`${baseUrl}/api/school/create`,payload.payload)
                     .then((response) => {
-                        commit("setData", {itemsName:"schools",data:response});
+                        commit("pushData", {itemsName:"schools",data:response});
                     });
                 });
             }else{
                 this.$axios
                 .$post(`${baseUrl}/api/school/create`,payload.payload)
                 .then((response) => {
-                    commit("setData", {itemsName:"schools",data:response});
+                    commit("pushData", {itemsName:"schools",data:response});
                 });
             }
 
@@ -66,14 +66,14 @@ export const  mutations= {
                     this.$axios
                     .$post(`${baseUrl}/api/school/update/${payload._id}`,payload.payload)
                     .then((response) => {
-                        commit("setData", {itemsName:"schools",data:response});
+                        commit("updateItem", {itemsName:"schools",data:response});
                     });
                 });
             }else{
                 this.$axios
                 .$post(`${baseUrl}/api/school/update/${payload._id}`,payload.payload)
                 .then((response) => {
-                    commit("setData", {itemsName:"schools",data:response});
+                    commit("updateItem", {itemsName:"schools",data:response});
                 });
             }
 

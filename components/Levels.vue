@@ -232,9 +232,7 @@
         return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
       },
       levels(){
-        let le = this.$store.getters['settings/getlevels']
-        console.log(le);
-        return le
+        return  this.$store.getters['settings/getlevels']
       },
       teachers(){
         let teachers =this.$store.getters['management/getTeachers']

@@ -7,6 +7,7 @@ export const state = () => ({
         st:null,
         student:null,
         subjects:[],
+        classes:null
      });
 export const  mutations= { 
         pushData(state,payload){
@@ -30,7 +31,7 @@ export const  mutations= {
             this.$axios
             .$post(`${baseUrl}/api/department/create`, payload)
             .then((res) => {
-                commit("pushTodepartment",res.data);
+                commit("pushData", {itemsName:"departments",data:res});
             }).catch(err=>{
                 console.log(err)
             })
@@ -121,8 +122,29 @@ export const  mutations= {
             })
         },
 
-       
-
+        addClass({dispatch,commit},payload){
+            this.$axios
+            .$post(`${baseUrl}/api/classes/create`, payload)
+            .then((res) => {
+                commit("pushData", {itemsName:"classes",data:response});
+            }).catch(err=>{
+                console.log(err)
+            })
+        },
+        getClasses({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
+            let token = payload;
+            this.$axios
+             .$get(`${baseUrl}/api/classes/getClasses`, {
+                headers: {
+                  authtoken: token,
+                },
+              })
+              .then((response) => {
+                commit("setData", {itemsName:"classes",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+              })
+          },
         getStaff({dispatch,commit }, payload) {
             dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
@@ -242,6 +264,9 @@ export const  mutations= {
                 return {...staff, roles: staff.roles.filter((role) => role.role === "Teacher")}
             })
             return teachers
+        },
+        clases(state){
+            return state.classes
         }
     }
   

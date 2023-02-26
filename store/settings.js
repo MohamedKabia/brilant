@@ -14,37 +14,32 @@ export const mutations= {
         setLoading(state, payload){
             state.loading=payload;
         },
-        pushToLevels(state, payload){
-           state.levels.push(payload)
-        },
+        setData(state,payload){
+            state[payload.itemsName]=payload.data
+        }, 
+       
         pushData(state,payload){
             state[payload.itemsName].push(payload.data)
-            console.log(state.items)
         },
-        setPrograms(state, payload){
-            state.programs=payload;
-        },
-        pushToprograms(state, payload){
-            state.student.push(payload);
-        },
-
-        pushToStaff(state, payload){
-            state.staff.push(payload);
-        },
-       
-        setLevels(state,payload){
-            state.levels=payload
-        },
-        
+    
         //general update
         updateItem(state,payload){
+            let itemName=payload.itemsName
+            let item=  state[itemName].find(item=>{
+                return item._id== payload.data._id
+            });
+            let i =state[itemName].indexOf(item);
+            state[itemName].splice(i, 1)
+            state[itemName].push(payload.data)
+        },
+        removeItem(state,payload){
             let items=payload.itemsName
             let a=  state[items].find(item=>{
                 return item._id== payload.data._id
             });
-            let i =state.items.indexOf(a);
-            state.items[i]=payload.date;
-        }
+            let i =state[items].indexOf(a);
+            state[items].splice(i, 1)
+        },
      };
 
 export const actions= {  
@@ -52,7 +47,7 @@ export const actions= {
         this.$axios
         .$post(`${baseUrl}/api/level/create`, payload)
         .then((res) => {
-            commit("pushToLevels",res.data);
+            commit("pushData",{data:res, levels:'programs'});
         }).catch(err=>{
             console.log(err)
         })
@@ -71,16 +66,16 @@ export const actions= {
         this.$axios
         .$post(`${baseUrl}/api/level/update/${payload._id}`, payload)
         .then((res) => {
-            commit("updateItem",{data:payload, itemNmae:"levels"});
+            commit("updateItem",{data:res, itemsName:"levels"});
         }).catch(err=>{
             console.log(err)
         })
     },
     updateProgram({commit},payload){
         this.$axios
-        .$post(`${baseUrl}/api/programs/update/${payload._id}`, payload)
+        .$post(`${baseUrl}/api/programs/update/${payload._id}`, payload.data)
         .then((res) => {
-            commit("updateItem",{data:payload, itemNmae:"programs"});
+            commit("updateItem",{data:res, itemsName:"programs"});
         }).catch(err=>{
             console.log(err)
         })
@@ -96,7 +91,7 @@ export const actions= {
             },
             })
             .then((response) => {
-            commit("setLevels", response);
+            commit("setData", {itemsName:"levels",data:response});
             })
             .catch((err) => {
             console.log("levels error", err)
@@ -112,7 +107,7 @@ export const actions= {
             },
             })
             .then((response) => {
-            commit("setPrograms", response);
+            commit("setData", {itemsName:"programs",data:response});
             })
             .catch((err) => {
             console.log("programs error", err)
@@ -120,7 +115,6 @@ export const actions= {
         },
 
         setLoading({commit},payload){
-            console.log("loading=====");
             commit("setLoading",payload)
          },
          setRedirect({commit},payload){

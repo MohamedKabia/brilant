@@ -36,7 +36,11 @@
       app
       flat
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" light/>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" color="primary"/>
+      <v-spacer></v-spacer>
+
+      <v-btn icon><v-icon color="primary">mdi-bell</v-icon></v-btn>
+      <v-btn icon to="profile"><v-icon color="secondary">mdi-account</v-icon></v-btn>
     </v-app-bar>
     <LoaderVue/>
     </div>

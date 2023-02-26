@@ -15,7 +15,7 @@
                             <v-col cols="12" md="6">
                                     <v-text-field
                                         class="text-uppercase"
-                                        v-model="editedItem.name"
+                                        v-model="name"
                                         :rules="required"
                                         label="Name"
                                         outlined
@@ -24,14 +24,24 @@
                                         @keyup="validateName"
                                     ></v-text-field>
                                 </v-col>
-                                
                                 <v-col cols="12" md="6">
                                     <v-combobox
-                                    v-model="hods"
-                                    :items="staffOptions"
-                                    label="HOD"
+                                    v-model="level"
+                                    :items="levelOption"
+                                    label="Level/Grade"
                                     dense
-                                    outlined                                     
+                                    outlined 
+                                    :rules="required" 
+                                    ></v-combobox>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-combobox
+                                    v-model="formMaster"
+                                    :items="staffOptions"
+                                    label="Class Supervisor"
+                                    dense
+                                    outlined 
+                                    :rules="required" 
                                     ></v-combobox>
                                 </v-col>
                                 <v-col cols="12" md="6">
@@ -44,20 +54,10 @@
                                     multiple 
                                     ></v-combobox>
                                 </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-combobox
-                                    v-model="subjects"
-                                    :items="subjectOptions"
-                                    label="Subject"
-                                    dense
-                                    outlined 
-                                    multiple 
-                                    :rules="required"
-                                    ></v-combobox>
-                                </v-col>
+                                
                         </v-row>
                         <v-card-actions>
-                            <v-btn color="primary" @click="save">Update <v-icon>mdi-kite</v-icon></v-btn> 
+                            <v-btn color="primary" @click="save">Save <v-icon>mdi-kite</v-icon></v-btn> 
                             <v-btn outlined color="secondary" @click="close" class="ml-5">Close</v-btn>
                         </v-card-actions>
                    </v-form>
@@ -68,22 +68,32 @@
 </template>
 <script>
 export default {
-    props:['dialog','editedItem'],
+    props:['dialog'],
     data(){
         return{
             errMessage:null,
-            subjects:[],
-            teachers:[],
-            hods:null,
+            name:"",
+            formMaster:null,
+            level:null,
             required: [
             v => !!v || 'This field is required',
             ],
-            selectedItems:null,
-           
         }
     },
-   
+    
     computed: {
+        levels(){
+            return  this.$store.getters['settings/getlevels']
+        },
+        levelOption(){
+            let data=[];
+                if(this.levels){
+                    this.levels.forEach(st=>{
+                        data.push({ value:st._id, text:st.grade},)
+                })
+            }
+            return data;
+        },
         staffOptions(){
             let staff= this.$store.getters['management/getStaff']
             let data=[];
@@ -96,26 +106,18 @@ export default {
         },
 
        
-        departments(){
-           return this.$store.getters['management/getDepartments'];
+        classes(){
+           return this.$store.getters['management/classes'];
         },
-        subjectOptions(){
-           let data=[];
-           let subjects= this.$store.getters['management/getSubjects'];
-           if(subjects.length>0){
-             subjects.forEach(d=>{
-                data.push({ value:d._id, text:d.name},)
-             })
-           }
-          return data;
-        },
+       
 
     },
     methods: {
         validateName(){
-            if(this.departments){
-                let nameTaken =this.departments.some(dep=> dep.name == this.name);
-                if(nameTaken) {this.errMessage="This department already exist"}
+            if(this.classes){
+                let nameTaken =this.classes.some(clas=> clas.name == this.name);
+                if(nameTaken) {this.errMessage="A class with this name already exist"}
+                
                 else {this.errMessage=null}
             }else{
                 this.errMessage =null
@@ -130,54 +132,33 @@ export default {
             return objectId
         }
 
-        let hods;
+        let formMaster;
         let teachers;
-        let subjects;
+        let level;
         if(this.teachers){
             teachers =refObject(this.teachers)
         }
-        if(this.subjects){
-            subjects =refObject(this.subjects)
+       
+        if(this.formMaster){
+            formMaster ={_id:this.formMaster.value}
         }
-        if(this.hods){
-            hods ={_id:this.hods.value}
+        if(this.level){
+            level ={_id:this.level.value}
         }
 
         let data={
-            name:this.editedItem.name,
-            hods,teachers,subjects
+            name:this.name,
+            formMaster,teachers,level
         };
-        this.$store.dispatch('management/updateDepartment',{data,_id:this.editedItem._id})
+        this.$store.dispatch('management/addClass',data)
         this.close()
        },
 
        close () {
-        this.subjects=[],
-        this.teachers=[];
-        this.teachers=[];
-        this.hods=null;
+          this.level=null;
+          this.formMaster=null;
           this.$emit('update:option', false);
         },
-    },
-    watch: {
-        dialog(val){
-            console.log(val)
-            if(val && this.editedItem){
-                this.editedItem.teachers.forEach(st=>{
-                    if(st){
-                        this.teachers.push({value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
-                    }
-                });
-                this.editedItem.subjects.forEach(st=>{
-                    if(st){
-                        this.subjects.push({value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
-                    }
-                });
-                if(this.editedItem.hods[0]){
-                    this.hods={value:this.editedItem.hods[0]._id, text:this.editedItem.hods[0].staffId+' '+this.editedItem.hods[0].firstName+' '+this.editedItem.hods[0].lastName}
-                }
-            }
-        }
     },
 }
 </script>
