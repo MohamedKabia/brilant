@@ -66,7 +66,8 @@
             { title: 'Department', to:'/setup/departments'},
             { title: 'Clases', to:'/setup/classes'},
             { title: 'Levels/Grade', to:'/setup/levels'},
-            { title: 'Subjects', to:'/setup/subjects'}
+            { title: 'Subjects', to:'/setup/subjects'},
+            { title: 'programs', to:'/setup/programs'},
         ],
           title: 'Setup',
         },
