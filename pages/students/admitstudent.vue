@@ -7,7 +7,7 @@
     </div>
 </template>
 <script>
-    import Admission from "../../components/Admission.vue"
+    import Admission from "../../components/Admission1.vue"
     import Titlebar from "../../components/default/Titlebar.vue";
 export default {
     name:'StudentList',
