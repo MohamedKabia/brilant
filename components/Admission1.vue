@@ -479,7 +479,7 @@ export default {
            let data=[];
            if(this.levels){
              this.levels.forEach(level=>{
-                data.push({ value:level._id, text:level.name},)
+                data.push({ value:level._id, text:level.grade},)
              })
            }
           return data;
@@ -625,6 +625,7 @@ export default {
             } 
             if(this.valid & this.dob !=null & this.image != null){
                 let password =this.generatePassword();
+                
                 let data={
                     firstName:this.firstName,
                     lastName: this.lastName,
@@ -634,15 +635,12 @@ export default {
                     phone:this.phone,
                     email:this.email,
                     password:password,
-
                     gender:this.gender,
                     level: {
                         _id:this.level.value
                     },
                     address:this.address,
-                    program: {
-                        _id: this.program.value
-                    },
+                    
                     school:{
                         _id:this.school.value
                     },
@@ -667,7 +665,12 @@ export default {
                         }
                     }
                 }
-
+                if(this.program){
+                    let program= {
+                        _id: this.program.value
+                    }
+                    data.program=program;
+                }
                 this.$store.dispatch('management/addStudent',{data,studentimage:formData})
             }
         }

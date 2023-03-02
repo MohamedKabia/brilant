@@ -90,13 +90,13 @@ export const  mutations= {
         addStudent({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
             this.$axios
-            .$post(`${baseUrl}/api/single/studentpp`, payload.pp)
+            .$post(`${baseUrl}/api/single/studentpp`, payload.studentimage)
             .then((response) => {
-               payload.data.pp=response.pp;
+               payload.data.pp=response.pp;//set student image url
                this.$axios
             .$post(`${baseUrl}/api/student/create`, payload.data)
             .then((response) => {
-                commit("pushData", {itemsName:"student",data:response.data});
+                commit("pushData", {itemsName:"students",data:response.data});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 dispatch('settings/setRedirect',true,{root:true});
             });

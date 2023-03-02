@@ -89,13 +89,26 @@
                   size="36px"
                 >
                   <img
-                    alt="Avatar"
-                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                    :alt="item.firstName+' '+item.LastName"
+                    :src='baseUrl+"/"+item.pp'
                   >
                   
                 </v-avatar>
-                <span v-if="item">{{item.firstName +" "+ item.lastName}}</span>
+                <span v-if="item" class="ml-3">{{item.firstName}} <span v-if="item.middletName">{{item.middleName}}</span> {{ item.lastName }}</span>
                 </nuxt-link>
+            </div>
+        </template>
+        <template v-slot:item.dob="{item}">
+        <v-chip
+          class="ma-2"
+          outlined
+        >
+        {{item.dob | moment("dddd, MMMM Do YYYY")}}
+        </v-chip>
+      </template>
+        <template v-slot:item.level="{item}">
+            <div class="secondary--text">
+              {{ item.level.grade }}/{{ item.level.level }}
             </div>
         </template>
 
@@ -189,6 +202,9 @@
         students(){
           return this.$store.getters['management/getStudents'];
         },
+        baseUrl(){
+          return this.$store.getters['management/baseUrl'];
+        },
         headers () {
           return [
           {
@@ -213,7 +229,7 @@
               },
             },
             { text: 'DOB', value: 'dob' },
-            { text: 'Grade/Form', value: 'grade' },
+            { text: 'Form/Grade', value: 'level' },
             { text: 'Actions', value: 'actions' },
           ]
         },
