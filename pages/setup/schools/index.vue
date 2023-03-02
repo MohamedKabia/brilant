@@ -29,12 +29,7 @@
                             <v-card-subtitle v-text="item.displayName"></v-card-subtitle>
 
                             <v-card-actions class="pt-5">
-                                <v-btn
-                                    outlined
-                                    rounded
-                                    small
-                                    @click="editItem(item)"
-                                >
+                                <v-btn outlined rounded small @click="editItem(item)">
                                     Edit <v-icon class="ml-1" color="info">mdi-pencil</v-icon>
                                 </v-btn>
                                 <v-btn small rounded outlined color="primary" @click="selectStaff(item)">
@@ -52,7 +47,7 @@
 
                         <v-avatar
                             class="ma-3"
-                            size="125"
+                            size="120"
                             tile
                         >
                             <v-img v-if="item.badg" :src="baseUrl+'/'+item.badg"></v-img>
