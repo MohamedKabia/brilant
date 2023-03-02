@@ -258,6 +258,9 @@ export const  mutations= {
         getStaffById:(state) => (id) => {
             return state.staff.find((st) => st._id === id);
         },
+        getStudentById:(state) => (id) => {
+            return state.students.find((st) => st._id === id);
+        },
         baseUrl(){
             return baseUrl
         },

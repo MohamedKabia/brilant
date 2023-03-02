@@ -53,11 +53,10 @@ export default {
     },
     computed: {
         id(){
-            console.log(this.$route.params.id)
             return this.$route.params.id
         },
-        today(){
-            return new Date()
+        student(){
+            return this.$store.getters['management/getStudentById'](this.id)
         },
         currentTime(){
             return this.today.getHours() +":"+this.today.getMinutes()

@@ -1,10 +1,15 @@
 <template>
     <div>
         <v-container>
-            <v-row>
+            <v-row v-if="student">
+                <v-col cols="12">
+                    <div class="center">
+                        <h3 :color="student.school.color">{{ student.school.name }}</h3>
+                    </div>
+                </v-col>
                 <v-col cols="12" sm="4">
                     <v-img
-                    src="/pp.png"
+                    :src='baseUrl+"/"+student.pp'
                     aspect-ratio="0.9"
                     ></v-img>
                 </v-col>
@@ -18,19 +23,19 @@
                                 <li>DOB:</li>
                                 <li>Gender:</li>
                                 <li>Gade/Form:</li>
-                                <li>Departmetn:</li>
+                                <li v-if="student.program">Program:</li>
                             </ul>
                         </v-col>
 
                         <v-col cols="6">
                             <ul class="u-list">
-                                <li>{{id}}</li>
-                                <li>Medvik</li>
-                                <li>kabiam@goldentsoftware.com</li>
-                                <li>30/05/2002</li>
-                                <li>Male</li>
-                                <li>12</li>
-                                <li>Pure Science</li>
+                                <li>{{student.studentId}}</li>
+                                <li>{{student.firstName}} <span v-if="student.middleName">{{ student.middleName }}</span> {{ student.lastName }}</li>
+                                <li>{{ student.email }}</li>
+                                <li>{{student.dob}}</li>
+                                <li>{{student.gender}}</li>
+                                <li>{{student.level.grade}}/{{student.level.level}}</li>
+                                <li v-if="student.program">{{student.program}}</li>
                             </ul>
                         </v-col>
                     </v-row>
@@ -50,8 +55,13 @@ export default {
     },
     computed: {
         id(){
-            console.log(this.$route.params.id)
             return this.$route.params.id
+        },
+        student(){
+            return this.$store.getters['management/getStudentById'](this.id)
+        },
+        baseUrl(){
+            return this.$store.getters['management/baseUrl']
         }
     },
 }
