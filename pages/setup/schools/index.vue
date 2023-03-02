@@ -35,14 +35,17 @@
                                     small
                                     @click="editItem(item)"
                                 >
-                                    Edit <v-icon class="ml-2" color="info">mdi-pencil</v-icon>
+                                    Edit <v-icon class="ml-1" color="info">mdi-pencil</v-icon>
                                 </v-btn>
                                 <v-btn small rounded outlined color="primary" @click="selectStaff(item)">
-                                    Staff <v-icon class="ml-2" color="green">mdi-account-plus</v-icon>
+                                    Staff <v-icon class="ml-1" color="green">mdi-account-plus</v-icon>
                                 </v-btn>
                                 
                                 <v-btn small rounded outlined color="secondary" @click="selectDep(item)">
-                                    Dep <v-icon class="ml-2" color="green">mdi-house-plus</v-icon>
+                                    Dep <v-icon class="ml-1" color="green">mdi-house-plus</v-icon>
+                                </v-btn>
+                                <v-btn small rounded outlined color="secondary" @click="selectProg(item)">
+                                    Prog <v-icon class="ml-1" color="green">mdi-house-plus</v-icon>
                                 </v-btn>
                             </v-card-actions>
                         </div>
@@ -60,6 +63,7 @@
                 </v-col>
             </v-row>
             <SelectDepartment :dialog="depDiolog" @update:option="closeDepSelect"/>
+            <SelectPrograms :dialog="progDialog" @update:option="closeDepSelect"/>
             <SelectStaffVue :dialog="staffDialog" @update:option="closeStaffSelect"/>
             <CreateSchool :editedIndex="editedIndex" :editedItem="editedItem" :defaultItem="defaultItem" :dialog="dialog" @update:option="closeDialog"/>
         </v-container>
@@ -69,11 +73,14 @@
 import CreateSchool from '../../../components/SchoolCompinent/create.vue';
 import SelectStaffVue from '../../../components/default/selectors/selectStaff.vue';
 import SelectDepartment from '../../../components/default/selectors/SelectDepartment.vue';
+import SelectPrograms from '../../../components/default/selectors/SelectPrograms.vue';
+
 export default {
-    components:{CreateSchool,SelectStaffVue,SelectDepartment},
+    components:{CreateSchool,SelectStaffVue,SelectDepartment,SelectPrograms},
     data(){
         return{
             staffDialog:false,
+            progDialog:false,
             dialog:false,
             depDiolog:false,
             selectedStaff:null,
@@ -115,6 +122,11 @@ export default {
             this.editedIndex = this.schools.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.depDiolog = true
+      },
+      selectProg (item) {
+            this.editedIndex = this.schools.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.progDialog = true
       },
       closeDialog(){
             this.dialog=false;

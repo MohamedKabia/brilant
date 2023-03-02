@@ -73,20 +73,6 @@ export const  mutations= {
 
         },
 
-        /*addStudent({dispatch,commit},payload){
-            dispatch('settings/setLoading',{loading:true,message:'Adding Student'},{root:true});
-            this.$axios
-            .$post(`${baseUrl}/api/student/create`, payload)
-            .then((response) => {
-
-                commit("pushData", {itemsName:"students",data:response});
-                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
-                dispatch('settings/setRedirect',true,{root:true});
-              
-            }).catch(err=>{
-                console.log(err)
-            })
-        },*/
         addStudent({dispatch,commit},payload){
             dispatch('settings/setLoading',{loading:true,message:'Adding Employee'},{root:true})
             this.$axios
