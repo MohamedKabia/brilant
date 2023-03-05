@@ -7,7 +7,7 @@
                         <h3 :color="student.school.color">{{ student.school.name }}</h3>
                     </div>
                 </v-col>
-                <v-col cols="12" sm="4">
+                <v-col cols="12" sm="2">
                     <v-img
                     :src='baseUrl+"/"+student.pp'
                     aspect-ratio="0.9"
