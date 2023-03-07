@@ -58,7 +58,7 @@
                 </v-col>
             </v-row>
             <SelectDepartment :dialog="depDiolog" @update:option="closeDepSelect"/>
-            <SelectPrograms :dialog="progDialog" @update:option="closeDepSelect"/>
+            <SelectPrograms :dialog="progDialog" @update:option="closeProgSelection"/>
             <SelectStaffVue :dialog="staffDialog" @update:option="closeStaffSelect"/>
             <CreateSchool :editedIndex="editedIndex" :editedItem="editedItem" :defaultItem="defaultItem" :dialog="dialog" @update:option="closeDialog"/>
         </v-container>
@@ -129,35 +129,47 @@ export default {
             this.editedIndex = -1
         },
         updateSchool(item){
-            let updata ={
+            let update ={
                 _id:this.editedItem._id,
                 ...item
             };
-            this.$store.dispatch('school/update',updata);
+            console.log(update)
+            this.$store.dispatch('school/update',update);
 
             this.editedItem = Object.assign({}, this.defaultItem)
             this.editedIndex = -1
         },
         closeStaffSelect(val){
             this.staffDialog=val.dialog
-            let depArr=[]
+            let staffArr=[]
             if(val.data){
                 val.data.forEach(staff => {
-                    depArr.push({_id:staff.value},)
+                    staffArr.push({_id:staff.value},)
                 });
             };
-            this.updateSchool({departments:depArr})
-            
+            this.updateSchool({payload:{staffs:staffArr}})
         },
         closeDepSelect(val){
             this.depDiolog=val.dialog
-            let staffArr=[]
+            let depArr=[]
             if(val.data){
                 val.data.forEach(dep => {
-                    staffArr.push({_id:dep.value},)
+                    depArr.push({_id:dep.value},)
                 });
             }else console.log("nothing selected")
-            this.updateSchool({staffs:staffArr})
+            this.updateSchool({payload:{departments:depArr}})
+        },
+        closeProgSelection(val){
+            this.progDialog=val.dialog;
+            let progArr=[]
+            if(val.data){
+                val.data.forEach(prog => {
+                    progArr.push({_id:prog.value},)
+                });
+                this.updateSchool({payload:{programs:progArr}})
+                console.log(progArr)
+            }else console.log("nothing selected")
+            
         }
     },
 }

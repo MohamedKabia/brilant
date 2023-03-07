@@ -19,12 +19,6 @@ export const  mutations= {
             let i =state.items.indexOf(a);
             state.items[i]=payload.date;
         },
-
-        feesTypes(state,payload){
-            payload.forEach(fees => {
-                
-            });
-        }
      };
      export const    actions= {  
         getSchools({commit},payload){
