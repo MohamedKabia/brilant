@@ -10,27 +10,29 @@ export const state = () => ({
         studentBills:null
      });
 export const  mutations= { 
+        setData(state,payload){
+            state[payload.itemsName]=payload.data
+        }, 
         pushData(state,payload){
             state[payload.itemsName].push(payload.data)
         },
-        setData(state,payload){
-            state[payload.itemsName]=payload.data
-        },        
-        //general update
         updateItem(state,payload){
+            let itemName=payload.itemsName
+            let item=  state[itemName].find(item=>{
+                return item._id== payload.data._id
+            });
+            let i =state[itemName].indexOf(item);
+            state[itemName].splice(i, 1)
+            state[itemName].push(payload.data)
+        },
+        removeItem(state,payload){
             let items=payload.itemsName
             let a=  state[items].find(item=>{
                 return item._id== payload.data._id
             });
-            let i =state.items.indexOf(a);
-            state.items[i]=payload.date;
+            let i =state[items].indexOf(a);
+            state[items].splice(i, 1)
         },
-
-        feesTypes(state,payload){
-            payload.forEach(fees => {
-                
-            });
-        }
      };
      export const    actions= {  
        
@@ -51,7 +53,7 @@ export const  mutations= {
             this.$axios
             .$post(`${baseUrl}/api/billing/update/${id}`, payload.data)
             .then((response) => {
-                //commit("pushData", {itemsName:"staff",data:response});
+                //ommit("pushData", {itemsName:"staff",data:response});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 dispatch('settings/setRedirect',true,{root:true});
             });
@@ -64,18 +66,46 @@ export const  mutations= {
                 //commit("pushData", {itemsName:"staff",data:response});
             });
         },
-
+        addFees({dispatch,commit}, payload) {
+            dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
+            this.$axios
+             .$post(`${baseUrl}/api/fees/create`,payload)
+              .then((response) => {
+                commit("pushData", {itemsName:"fees",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+              })
+          },
         getFees({dispatch,commit}, payload) {
             dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
             let token = payload;
             this.$axios
-             .$get(`${baseUrl}/api/billing/getStudentsBill`, {
+             .$get(`${baseUrl}/api/fees/getFeess`, {
                 headers: {
                   authtoken: token,
                 },
               })
               .then((response) => {
                 commit("setData", {itemsName:"fees",data:response});
+                commit('feesTypes', response)
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+              })
+          },
+          updateFee({dispatch,commit}, payload) {
+            dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
+            this.$axios
+             .$post(`${baseUrl}/api/fees/update/${payload._id}`,payload)
+              .then((response) => {
+                commit("updateItem", {itemsName:"fees",data:response});
+                commit('feesTypes', response)
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+              })
+          },
+          deleteFee({dispatch,commit}, payload) {
+            dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
+            this.$axios
+             .$post(`${baseUrl}/api/fees/delete/${payload._id}`,payload)
+              .then((response) => {
+                commit("removeItem", {itemsName:"fees",data:response});
                 commit('feesTypes', response)
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })

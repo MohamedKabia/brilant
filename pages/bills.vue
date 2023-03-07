@@ -1,17 +1,17 @@
 <template>
     <div>
         <v-container>
-            <Titlebar title="BIlls"/>
-            <BIlls/>
+            <Titlebar title="Fees"/>
+            <Fees/>
         </v-container>
     </div>
 </template>
 <script>
-    import BIlls from '../components/Bills.vue'
+    import Fees from '../components/Fees.vue'
     import Titlebar from "../components/default/Titlebar.vue";
 export default {
     name:'StudentList',
-    components:{BIlls,Titlebar},
+    components:{Fees,Titlebar},
     data() {
         return {
             

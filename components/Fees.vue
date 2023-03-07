@@ -9,7 +9,7 @@
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Fees Bills & Payment</v-toolbar-title>
+          <v-toolbar-title>Fees Bills</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -28,7 +28,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                Add New Bill
+                Add New Fee
               </v-btn>
             </template>
             <v-card>
@@ -46,7 +46,7 @@
                     >
                       <v-text-field
                         v-model="editedItem.name"
-                        label="Bill name"
+                        label="Name"
                         dense
                         outlined 
                       ></v-text-field>
@@ -57,11 +57,18 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.dueDate"
-                        label="Due Date"
+                        v-model="editedItem.displayName"
+                        label="Display Name"
                         dense
                         outlined 
                       ></v-text-field>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <DatePickerVue dateTitle="Due Date" :date="date" @update:option="getDueDate"/>
                     </v-col>
                     <v-col
                       cols="12"
@@ -155,18 +162,15 @@
     </v-data-table>
   </template>
   <script>
+  import DatePickerVue from './default/DatePicker.vue'
     export default {
+      components:{DatePickerVue},
       data: () => ({
         dialog: false,
         dialogDelete: false,
-       
+        date:null,
         headers: [
-        {
-            text: 'Student Name',
-            align: 'start',
-            sortable: false,
-            value: 'studentName',
-          },
+        
           {
             text: 'Bill Name',
             align: 'start',
@@ -174,24 +178,24 @@
             value: 'name',
           },
           {
+            text: 'Display Name',
+            align: 'start',
+            sortable: false,
+            value: 'editedItem',
+          },
+          {
             text: 'Amount',
             align: 'start',
             sortable: false,
             value: 'amount',
           },
-          {
-            text: 'Balance',
-            align: 'start',
-            sortable: false,
-            value: 'amount',
-          },
-          { text: 'Due Date', value: 'dueDate' },
           
+          { text: 'Due Date', value: 'dueDate' },
           { text: 'Actions', value: 'actions', sortable: false },
         ],
-        fees: [],
         editedIndex: -1,
         editedItem: {
+          displayName: '',
           name: '',
           amount:0,
           dueDate: null,
@@ -199,6 +203,7 @@
         },
         defaultItem: {
           name: '',
+          displayName: '',
           amount:0,
           dueDate: null,
           description:''
@@ -220,51 +225,19 @@
         },
       },
   
-      created () {
-        this.initialize()
-      },
       computed: {
         fees(){
-          return this.$store.getters['accounting/fees']
+          return this.$store.getters['accounting/Fees']
         },
         feesTypes(){
           return this.$store.getters['accounting/feesTypes']
         }
       },
       methods: {
-        initialize () {
-          this.fees = [
-            
-            {
-              id:"1",
-              code:'usls',
-              name: 'First Term Fees',
-              amount:2000,
-              dueDate: 237,
-              description: "awesome"
-            },
-            {
-              id:"2",
-              code:'usds',
-              name: 'Second Term Fee',
-              amount:2000,
-              dueDate: 262,
-              description: "awesome descr"
-            },
-            {
-              id:"3",
-              code:'uvls',
-              name: 'Tution Fee',
-              amount:2000,
-              dueDate: "awesome"
-            },
-          
-          ]
-        },
-  
         editItem (item) {
           this.editedIndex = this.fees.indexOf(item)
           this.editedItem = Object.assign({}, item)
+          this.date=this.editedItem.dueDate;
           this.dialog = true
         },
   
@@ -275,11 +248,12 @@
         },
   
         deleteItemConfirm () {
-          this.fees.splice(this.editedIndex, 1)
+          this.$store.dispatch('accounting/deleteFee',this.editedItem);
           this.closeDelete()
         },
   
         close () {
+          this.date=null;
           this.dialog = false
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
@@ -294,12 +268,14 @@
             this.editedIndex = -1
           })
         },
-  
+        getDueDate(value){
+            this.editedItem.dueDate =value
+        },
         save () {
           if (this.editedIndex > -1) {
-            Object.assign(this.fees[this.editedIndex], this.editedItem)
+            this.$store.dispatch('accounting/updateFee',this.editedItem)
           } else {
-            this.fees.push(this.editedItem)
+            this.$store.dispatch('accounting/addFees',this.editedItem)
           }
           this.close()
         },

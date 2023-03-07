@@ -13,7 +13,7 @@
                                 <v-combobox
                                 v-model="selectedItems"
                                 :items="programOptions"
-                                label="Select Departments"
+                                label="Select Program"
                                 dense
                                 outlined  
                                 multiple
@@ -66,11 +66,8 @@ export default {
             editedItem:null,
             highletedItem:null,
             selectedItems:null,
-           
             selectedPrograms:[],
-
             programOption:null,
-           
         }
     },
     computed: {
@@ -83,8 +80,8 @@ export default {
         programOptions(){
             let data=[];
             if(this.programs){
-                this.programs.forEach(dep=>{
-                data.push({ value:dep._id, text:dep.name},)
+                this.programs.forEach(prog=>{
+                data.push({ value:prog._id, text:prog.name},)
              })
            }
           return data;
@@ -96,15 +93,15 @@ export default {
                 let selectedDep = this.programs.filter(st=> {
                     return this.selectedItems.some(sc=> sc.value== st._id)
                 });
-                this.selectedPrograms =selectedDep
+                this.selectedPrograms =selectedDep;
             }
         },
-        selectDepartment(val){
+        SelectProgram(val){
             this.editedItem=val;
             let data=[]
             if(val.programs){
-                this.programOption= val.programs.forEach(dep=>{
-                    data.push({ value:dep._id, text:dep.name},)
+                this.programOption= val.programs.forEach(prog=>{
+                    data.push({ value:prog._id, text:prog.name},)
                 })
             }else this.errorMessage="Unexpeted Error"
         },

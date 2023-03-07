@@ -465,10 +465,11 @@ export default {
           return data;
         },
         programOptions(){
-            if(this.school.programs){
+            if(this.school){
+                let schData= this.schools.find(sch=> {return sch._id ==this.school.value})
                 let data=[];
-                if(this.school.programs){
-                    this.school.programs.forEach(program=>{
+                if(schData.programs){
+                    schData.programs.forEach(program=>{
                         data.push({ value:program._id, text:program.name},)
                     })
                 }
@@ -689,6 +690,9 @@ export default {
                 this.snackbar=true;
                 this.studentDetailsDialog=true;
             }
+        },
+        programOptions(val){
+            if(val.length ==1) this.program=val[0]
         }
     },
 

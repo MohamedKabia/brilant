@@ -34,11 +34,10 @@
   <script>
     export default {
         props:[
-        "dateTitle"
+        "dateTitle","date"
         ],
       data: () => ({
         activePicker: null,
-        date: null,
         menu: false,
       }),
       watch: {
