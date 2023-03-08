@@ -1,10 +1,29 @@
 <template>
+  <div>
     <v-data-table
       :headers="headers"
       :items="fees"
       sort-by="dueDate"
       class="elevation-1"
     >
+    <template v-slot:item.dueDate="{item}">
+        <v-chip
+          class="ma-2"
+          color="info"
+          outlined
+        >
+        {{item.dueDate | moment("dddd, MMMM Do YYYY")}}
+        </v-chip>
+      </template>
+      <template v-slot:item.name="{item}">
+        <nuxt-link
+          class="ma-2"
+          color="info"
+          :to='"/fees/"+item._id'
+        >
+        {{item.name}}
+        </nuxt-link>
+      </template>
       <template v-slot:top>
         <v-toolbar
           flat
@@ -42,7 +61,6 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <v-text-field
                         v-model="editedItem.name"
@@ -54,7 +72,6 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <v-text-field
                         v-model="editedItem.displayName"
@@ -66,14 +83,12 @@
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <DatePickerVue dateTitle="Due Date" :date="date" @update:option="getDueDate"/>
                     </v-col>
                     <v-col
                       cols="12"
                       sm="6"
-                      md="4"
                     >
                       <v-text-field
                         v-model="editedItem.amount"
@@ -132,40 +147,45 @@
           </v-dialog>
         </v-toolbar>
       </template>
+
       <template v-slot:item.actions="{ item }">
         
-        <nuxt-link :to='"/fees/"+item.id'>
-         
-        </nuxt-link>
-        <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
+        <v-btn small icon color="info" outlined
+        @click="selectStudents(item)">
+         <v-icon>mdi-geer</v-icon>
+        </v-btn>
+        <v-btn
+        icon
+        small
+        class="ml-2 mr-2"
+        color="primary" outlined 
+        @click="editItem(item)"
         >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
+           <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+
+        <v-btn
+        icon
+        small
+        color="error" outlined 
+        @click="deleteItem(item)"
         >
+        <v-icon>
           mdi-delete
         </v-icon>
-      </template>
-      <template v-slot:no-data>
-        <v-btn
-          color="primary"
-          @click="initialize"
-        >
-          Reset
-        </v-btn>
+      </v-btn>
       </template>
     </v-data-table>
+    <SelectStudents :dialog="studentDialog" @update:option="closeStudentSelection"/>
+  </div>  
   </template>
   <script>
   import DatePickerVue from './default/DatePicker.vue'
+  import SelectStudents from './default/selectors/SelectStudents.vue'
     export default {
-      components:{DatePickerVue},
+      components:{DatePickerVue,SelectStudents},
       data: () => ({
+        studentDialog:false,
         dialog: false,
         dialogDelete: false,
         date:null,
@@ -181,7 +201,7 @@
             text: 'Display Name',
             align: 'start',
             sortable: false,
-            value: 'editedItem',
+            value: 'displayName',
           },
           {
             text: 'Amount',
@@ -210,12 +230,6 @@
         },
       }),
   
-      computed: {
-        formTitle () {
-          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-        },
-      },
-  
       watch: {
         dialog (val) {
           val || this.close()
@@ -226,6 +240,9 @@
       },
   
       computed: {
+        formTitle () {
+          return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        },
         fees(){
           return this.$store.getters['accounting/Fees']
         },
@@ -234,6 +251,14 @@
         }
       },
       methods: {
+        closeStudentSelection(){
+          this.studentDialog=false;
+        },
+        selectStudents(item){
+          this.editedIndex = this.fees.indexOf(item)
+          this.editedItem = Object.assign({}, item)
+          this.studentDialog=true;
+        },
         editItem (item) {
           this.editedIndex = this.fees.indexOf(item)
           this.editedItem = Object.assign({}, item)

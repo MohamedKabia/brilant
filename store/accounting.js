@@ -101,11 +101,11 @@ export const  mutations= {
               })
           },
           deleteFee({dispatch,commit}, payload) {
-            dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
+            dispatch('settings/setLoading',{loading:false,message:'removing Fee'},{root:true});
             this.$axios
-             .$post(`${baseUrl}/api/fees/delete/${payload._id}`,payload)
+             .$post(`${baseUrl}/api/fees/delete/${payload._id}`)
               .then((response) => {
-                commit("removeItem", {itemsName:"fees",data:response});
+                commit("removeItem", {itemsName:"fees",data:payload});
                 commit('feesTypes', response)
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
