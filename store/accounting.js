@@ -123,6 +123,17 @@ export const  mutations= {
                 commit("setData", {itemsName:"studentBills",data:response});
                 })
         },
+        assignFee({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:'Assigning....'},{root:true});
+            this.$axios
+             .$post(`${baseUrl}/api/billing/assign`,payload)
+            .then((response) => {
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+            }).catch(err=>{
+                //throw error
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+            })
+        },
   
     };
     export const getters= { 

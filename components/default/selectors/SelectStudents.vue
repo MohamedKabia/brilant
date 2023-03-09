@@ -18,8 +18,6 @@
                     <v-btn
                         class="ml-1"
                         icon 
-                        outlined
-                        color="error"
                         @click="close"
                         >
                         <v-icon>mdi-close</v-icon>
@@ -40,44 +38,22 @@
                             dark
                             color="secondary"
                             text
-                            @click="close"
+                            @click="apply"
                         >
                         Apply
                         </v-btn>
                     </v-toolbar-items>
                     
                 </v-toolbar>
-                <div class="pa-5">
-                        <v-toolbar flat>
-                            <v-toolbar-items>
-                                <v-combobox
-                                v-model="yearStarted"
-                                :items="acYears"
-                                label="Year Started"
-                                dense
-                                outlined  
-                                multiple
-                            ></v-combobox>
-                            <v-combobox
-                                v-model="level"
-                                :items="levelOpptions"
-                                label="level"
-                                dense
-                                outlined  
-                                multiple
-                            ></v-combobox>
-                            <v-combobox
-                                v-model="group"
-                                :items="classOpptions"
-                                label="Class/Form/Group"
-                                dense
-                                outlined  
-                            ></v-combobox>
-                            <div><v-btn  color="info">Filter</v-btn></div>
-                            </v-toolbar-items>
-                        </v-toolbar>
-                    </div>
+                    
                 <v-card-text>
+                    <FilterCoomponent/>
+                    <v-chip
+                        color="warning"
+                        class="ml-2 mb-3"
+                    >
+                        {{ selected.length }} student selected
+                    </v-chip>
                     <v-data-table
                         v-model="selected"
                         :headers="headers"
@@ -124,23 +100,23 @@
     </div>
 </template>
 <script>
-import StaffTable from '../StaffTable.vue'
+import FilterCoomponent from "./Filter.vue"
 export default {
     props:['dialog'],
-    components:{StaffTable},
+    components:{FilterCoomponent},
     data(){
         return{
+            clearFilter:false,
             yearStarted:"",
-            group:"",
-            level:"",
+            group:null,
+            level:null,
             selected: [],
             search: '',
             errorMessage:null,
             editedItem:null,
             highletedItem:null,
-            selectedItems:null,
-            acYears:['2020/2021','2022/2023'],
-            
+            school:null,
+                        
             headers:[
             {
                 text: 'StudentID',
@@ -171,68 +147,35 @@ export default {
     },
     computed: {
         students(){
-               return this.$store.getters['management/getStudents'];
+               return this.$store.getters['management/filteredStudents'];
         },
         baseUrl(){
             return this.$store.getters['management/baseUrl'];
         },
-        staff(){
-            return  this.$store.getters['management/getStaff']
-        },
+       
         baseUrl(){
             return this.$store.getters['management/baseUrl']
-        },
-        classes(){
-          return this.$store.getters['management/clases']
-        },
-        classOpptions(){
-           let data=[];
-           if(this.classes){
-             this.classes.forEach(clas=>{
-                data.push({ value:clas._id, text:clas.name},)
-             })
-           }
-          return data;
-        },
-        levels(){
-            return  this.$store.getters['settings/getlevels']
-        },
-        levelOpptions(){
-           let data=[];
-           if(this.levels){
-             this.levels.forEach(level=>{
-                data.push({ value:level._id, text:level.grade},)
-             })
-           }
-          return data;
-        },
-        staffOptions(){
-            let data=[];
-            if(this.staff){
-                this.staff.forEach(st=>{
-                data.push({ value:st._id, text:st.staffId+' '+st.firstName+' '+st.lastName},)
-             })
-           }
-          return data;
-        },
-
-        departmentOptions(){
-           let data=[];
-           let department= this.$store.getters['management/getDepartments'];
-           if(department.length>0){
-             department.forEach(d=>{
-                data.push({ value:d._id, text:d.name},)
-             })
-           }
-          return data;
         },
 
     },
     methods: {
         
-        close (date) {
-          this.$emit('update:option', {dialog:false,data:this.selectedItems});
+        clear(){
+            this.school=null;
+            this.level=null;
+            this.group=null;
+            this.selected=[];
+            this.$store.dispatch('management/resetStudentFilter')
         },
+        close (date) {
+          this.$emit('update:option', {dialog:false,data:null});
+          this.clear();
+        },
+        apply(){
+            let data= this.selected;
+            this.$emit('update:option', {dialog:false,data});
+            this.clear();
+        }
     },
 }
 </script>

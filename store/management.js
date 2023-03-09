@@ -4,8 +4,10 @@ export const state = () => ({
         teachers:[],
         students:[],
         staff:[],
+        filteredSstaff:null,
         st:null,
         student:null,
+        filteredStudents:null,
         subjects:[],
         classes:null
      });
@@ -158,6 +160,7 @@ export const  mutations= {
               })
               .then((response) => {
                 commit("setData", {itemsName:"staff",data:response});
+                commit("setData", {itemsName:"filteredSstaff",data:response});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
@@ -220,24 +223,52 @@ export const  mutations= {
               })
               .then((response) => {
                 commit("setData", {itemsName:"students",data:response});
+                commit("setData", {itemsName:"filteredStudents",data:response});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
-        //get single student
-        getStudent({dispatch,commit }, payload) {
+          resetStudentFilter({state,commit }){
+            commit("setData", {itemsName:"filteredStudents",data:state.students});
+          },
+          resetStaffFilter({state,commit }){
+            commit("setData", {itemsName:"filteredSstaff",data:state.staff});
+          },
+          //filter student
+          filterStudents({dispatch,commit }, payload) {
             dispatch('settings/setLoading',{loading:true,message:''},{root:true});
             let token = payload;
             this.$axios
-                .$get(`${baseUrl}/api/student/get/${payload}`, {
-                headers: {
-                    authtoken: token,
-                },
-            })
-            .then((response) => {
-                commit("setData", {itemsName:"student",data:response});
+             .$post(`${baseUrl}/api/student/filter`,payload)
+              .then((response) => {
+                commit("setData", {itemsName:"filteredStudents",data:response});
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
-            })
-        },
+              })
+          },
+          filterstaff({dispatch,commit }, payload) {
+            dispatch('settings/setLoading',{loading:true,message:''},{root:true});
+            let token = payload;
+            this.$axios
+             .$post(`${baseUrl}/api/staff/filter`,payload)
+              .then((response) => {
+                commit("setData", {itemsName:"filteredSstaff",data:response});
+                dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+              })
+          },
+            //get single student
+            getStudent({dispatch,commit }, payload) {
+                dispatch('settings/setLoading',{loading:true,message:''},{root:true});
+                let token = payload;
+                this.$axios
+                    .$get(`${baseUrl}/api/student/get/${payload}`, {
+                    headers: {
+                        authtoken: token,
+                    },
+                })
+                .then((response) => {
+                    commit("setData", {itemsName:"student",data:response});
+                    dispatch('settings/setLoading',{loading:false,message:''},{root:true});
+                })
+            },
     };
     export const getters= { 
         getStudents(state){
@@ -272,6 +303,9 @@ export const  mutations= {
         },
         clases(state){
             return state.classes
+        },
+        filteredStudents(state){
+            return state.filteredStudents;
         }
     }
   

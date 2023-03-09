@@ -127,7 +127,6 @@ export default {
         return this.editedIndex === -1 ? 'Add New School' : 'Edit School'
       },
         schools(){
-            //get from store
             return  this.$store.getters['school/schools']
         },
        

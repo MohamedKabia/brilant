@@ -176,6 +176,25 @@
       </v-btn>
       </template>
     </v-data-table>
+    <v-dialog v-model="acYearDialog" width="300">
+        <v-card>
+          <v-card-text>
+            <div class="center">Please Select Academic Year for the fee <i>{{editedItem.name}}</i>
+              <v-combobox 
+                  v-model="acYear"
+                  :items="acYearOptions"
+                  label="Academic Year"
+                  dense
+                  outlined  
+                ></v-combobox>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="assignFee" color="primary">Assign</v-btn>
+            <v-btn @click="acYearDialog=!acYearDialog" text class="ml-2">close <v-icon> mdi-close</v-icon></v-btn>
+          </v-card-actions>
+        </v-card>
+    </v-dialog>
     <SelectStudents :dialog="studentDialog" @update:option="closeStudentSelection"/>
   </div>  
   </template>
@@ -185,10 +204,12 @@
     export default {
       components:{DatePickerVue,SelectStudents},
       data: () => ({
+        acYearDialog:false,
         studentDialog:false,
         dialog: false,
         dialogDelete: false,
         date:null,
+        acyear:'',
         headers: [
         
           {
@@ -213,6 +234,9 @@
           { text: 'Due Date', value: 'dueDate' },
           { text: 'Actions', value: 'actions', sortable: false },
         ],
+        acYearOptions:['2020/2021','2022/2023'],
+        students:null,
+        acYear:null,
         editedIndex: -1,
         editedItem: {
           displayName: '',
@@ -251,8 +275,32 @@
         }
       },
       methods: {
-        closeStudentSelection(){
-          this.studentDialog=false;
+        assignFee(){
+          let data = this.students
+          console.log(data)
+          let feeArray=[]
+          data.forEach(d=>{
+            feeArray.push({ 
+                fee:{_id:this.editedItem._id}, student:{_id:d._id}, acYear:this.acYear,
+              })
+            
+          });
+          this.$store.dispatch('accounting/assignFee',feeArray)
+          this.clear()
+        },
+        clear(){
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.editedIndex = -1
+            this.students=null;
+            this.acYear=null;
+            this.acYearDialog=false;
+        },
+        closeStudentSelection(res){
+          this.studentDialog=res.diolog;
+          if(res.data){
+            this.acYearDialog=true
+            this.students=res.data
+          }
         },
         selectStudents(item){
           this.editedIndex = this.fees.indexOf(item)

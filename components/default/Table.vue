@@ -1,5 +1,6 @@
 <template>
     <div>
+      <FilterVue/>
       <v-data-table
         v-model="selected"
         :headers="headers"
@@ -176,9 +177,10 @@
     </div>
   </template>
   <script>
+  import FilterVue from './selectors/Filter.vue';
   import StudentInfo from '../Documents/StudentInfo.vue';
     export default {
-      components:{StudentInfo},
+      components:{StudentInfo,FilterVue},
       data () {
         return {
           selected: [],
@@ -199,8 +201,11 @@
         }
       },
       computed: {
-        students(){
+        /*students(){
           return this.$store.getters['management/getStudents'];
+        },*/
+        students(){
+               return this.$store.getters['management/filteredStudents'];
         },
         baseUrl(){
           return this.$store.getters['management/baseUrl'];

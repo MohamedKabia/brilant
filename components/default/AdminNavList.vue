@@ -84,7 +84,7 @@
             { title: 'Invoice', to:'/accounting/invoice'},
             { title: 'Salary', to:'/accounting/salary'},
             { title: 'Expenses', to:'/accounting/expenses'},
-            { title: 'Bills/Fees', to:'/bills'},
+            { title: 'Student Fees', to:'/fees'},
           ],
           title: 'Accounting',
         },
