@@ -87,6 +87,7 @@ export const   actions= {
                 dispatch('settings/getPrograms',token,{root:true});
                 dispatch('accounting/getFees',token,{root:true});
                 dispatch('management/getClasses',token,{root:true});
+                dispatch('accounting/getStudentsFills',token,{root:true});
             }
             })
             .catch((error) => {

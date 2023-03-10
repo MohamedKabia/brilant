@@ -110,11 +110,23 @@ export const  mutations= {
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
               })
           },
-
+        
+        getStudentsFills({dispatch,commit }, id) {
+            let token = "payload";
+            this.$axios
+               .$get(`${baseUrl}/api/billing/getStudentsBills`, {
+                headers: {
+                    authtoken: token,
+                },
+                })
+                .then((response) => {
+                commit("setData", {itemsName:"studentBills",data:response});
+                })
+        },
         getStudentBills({dispatch,commit }, id) {
             let token = "payload";
             this.$axios
-               .$get(`${baseUrl}api/billing/get/student/${id}`, {
+               .$get(`${baseUrl}/api/billing/get/student/${id}`, {
                 headers: {
                     authtoken: token,
                 },
@@ -146,5 +158,6 @@ export const  mutations= {
         feesTypes(state){
             return state.feesTypes;
         },
+        
     }
   

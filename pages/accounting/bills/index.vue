@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container>
-            <Titlebar title="Bills"/>
+            <Titlebar title="Student Bills"/>
             <Bills/>
         </v-container>
     </div>
