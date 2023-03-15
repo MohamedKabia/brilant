@@ -8,8 +8,21 @@
             :items="bills"
             item-key="_id"
             class="elevation-1"
+            show-select
             :search="search"
         >
+        <template v-slot:top>
+          <div>
+            <v-text-field
+            v-model="search"
+            label="Search...."
+            class="mx-4"
+            outlined
+            dense
+            append-icon="mdi-magnify"
+          ></v-text-field>
+          </div>
+        </template>
         <template v-slot:item.studentId="{item}">
           <div>
             {{ item.student.studentId }}
@@ -32,7 +45,12 @@
         </template>
         
         <template v-slot:item.status="{item}">
-          <v-chip color="warning">
+          <v-chip :class="{
+            
+            'warning':!due(item) && item.status=='Un Paid',
+            'teal':item.status=='Deposit',
+            'success':item.status=='Paid',
+            'error': due(item) && item.status=='Un Paid'}">
             {{ item.status }}
           </v-chip>
         </template>
@@ -55,9 +73,10 @@
         <template v-slot:item.dueDate="{item}">
             <v-chip
             class="ma-2"
+            :class="{'error':due(item)}"
             outlined
             >
-            {{item.fee.dueDate | moment("dddd, MMMM Do YYYY")}}
+            {{item.fee.dueDate | moment("DD-MM-YY")}}
             </v-chip>
         </template>
         <template v-slot:item.actions="{item}">
@@ -135,7 +154,7 @@ export default {
   },
   computed: {
       bills(){
-             return this.$store.getters['accounting/studentBills'];
+             return this.$store.getters['accounting/allStudentBills'];
       },
       baseUrl(){
           return this.$store.getters['management/baseUrl'];
@@ -147,7 +166,12 @@ export default {
 
   },
   methods: {
-     
+     due(bill){
+        let today = new Date();
+        let date= new Date(bill.fee.dueDate).toISOString().substring(0,10);//toDateString()
+        return date <= today.toISOString().substring(0,10);//toDateString();
+        
+     }
   },
 }
 </script>

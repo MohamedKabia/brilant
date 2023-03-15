@@ -7,7 +7,8 @@ export const state = () => ({
         salaries:[],
         unpaidSalaries:[],
         lones:[],
-        studentBills:null
+        studentBills:null,
+        allStudentBills:null
      });
 export const  mutations= { 
         setData(state,payload){
@@ -36,13 +37,20 @@ export const  mutations= {
      };
      export const    actions= {  
        
-        acceptPayment({dispatch,commit},payload){
+        acceptPayment({dispatch,commit,rootState },payload){
             dispatch('settings/setLoading',{loading:true,message:'Processing'},{root:true});
             let id=payload._id
+            let token = rootState.account.authToken;
+            console.log(token)
             this.$axios
-            .$post(`${baseUrl}/api/billing/payment/${id}`, payload.data)
+            .$post(`${baseUrl}/api/billing/payment/${id}`, payload,{
+                headers: {
+                  authtoken: token,
+                },
+              })
             .then((response) => {
-                commit("pushData", {itemsName:"staff",data:response});
+                //commit("pushData", {itemsName:"staff",data:response});
+                console.log(response)
                 dispatch('settings/setLoading',{loading:false,message:''},{root:true});
                 dispatch('settings/setRedirect',true,{root:true});
             });
@@ -92,6 +100,7 @@ export const  mutations= {
           },
           updateFee({dispatch,commit}, payload) {
             dispatch('settings/setLoading',{loading:false,message:'Getting Fees'},{root:true});
+            
             this.$axios
              .$post(`${baseUrl}/api/fees/update/${payload._id}`,payload)
               .then((response) => {
@@ -111,7 +120,7 @@ export const  mutations= {
               })
           },
         
-        getStudentsFills({dispatch,commit }, id) {
+        getStudentsBills({dispatch,commit }, id) {
             let token = "payload";
             this.$axios
                .$get(`${baseUrl}/api/billing/getStudentsBills`, {
@@ -120,13 +129,13 @@ export const  mutations= {
                 },
                 })
                 .then((response) => {
-                commit("setData", {itemsName:"studentBills",data:response});
+                commit("setData", {itemsName:"allStudentBills",data:response});
                 })
         },
-        getStudentBills({dispatch,commit }, id) {
-            let token = "payload";
+        getStudentBills({dispatch,commit},payload) {
+            let token=""
             this.$axios
-               .$get(`${baseUrl}/api/billing/get/student/${id}`, {
+               .$get(`${baseUrl}/api/billing/get/student/${payload}`, {
                 headers: {
                     authtoken: token,
                 },
@@ -158,6 +167,9 @@ export const  mutations= {
         feesTypes(state){
             return state.feesTypes;
         },
+        allStudentBills(state){
+            return state.allStudentBills
+        }
         
     }
   
