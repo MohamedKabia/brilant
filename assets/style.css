@@ -157,3 +157,9 @@
     background-color: transparent;
     box-shadow: none;
  }
+
+ .drag-n-drop ul{
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px solid black
+ }

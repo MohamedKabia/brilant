@@ -7,6 +7,8 @@
   >
    
     <template v-slot:top>
+      <div>
+        <SetupVue :dialog="subjectDialog" :editedItem="editedItem" @update:option="closeSubDialog"/>
       <v-toolbar
         flat
        >
@@ -144,18 +146,17 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+    </div>
     </template>
     <template v-slot:item.actions="{ item }">
       
-      <nuxt-link :to='"/levels/"+item.id'>
         <v-icon
         small
         class="mr-2"
-        @click="editItem(item)"
+        @click="subjectDialog =!subjectDialog"
         >
           mdi-eye
         </v-icon>
-      </nuxt-link>
       <v-icon
         small
         class="mr-2"
@@ -174,8 +175,11 @@
   </v-data-table>
 </template>
 <script>
+import SetupVue from './SubjectsSelection/Setup.vue'
   export default {
+    components:{SetupVue},
     data: () => ({
+      subjectDialog:false,
       dialog: false,
       dialogDelete: false,
       headers: [
@@ -256,7 +260,9 @@
       }
     },
     methods: {
- 
+      closeSubDialog(res){
+      this.subjectDialog=res.diolog;
+    },
       editItem (item) {
         this.editedIndex = this.levels.indexOf(item);
         this.editedItem = Object.assign({}, item)

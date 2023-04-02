@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="students">
       <FilterVue/>
       <v-data-table
         v-model="selected"

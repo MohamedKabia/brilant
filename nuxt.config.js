@@ -28,7 +28,8 @@ export default {
   plugins: [
     {src:"./plugins/appexChart.js", ssr:false},
     {src:"./plugins/vueMoment.js", ssr:false},
-    {src:"./plugins/html2paper.js", ssr:false}
+    {src:"./plugins/html2paper.js", ssr:false},
+    {src:"./plugins/dragNDrop.js", ssr:false}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
